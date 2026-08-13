@@ -117,7 +117,7 @@
             <i class="fa-solid fa-chart-area text-teal-400"></i>
             體態變化趨勢圖
           </h2>
-          <p class="text-xs text-slate-400">雙 Y 軸精準解析：以 60kg 為基準的長遠目標視角</p>
+          <p class="text-xs text-slate-400">雙 Y 軸精準解析：統一閱讀邏輯（左軸折線、右軸柱狀）</p>
         </div>
         <div class="inline-flex p-1 bg-slate-900/80 rounded-xl border border-slate-700/80 self-start sm:self-auto">
           <button id="btn-mode-daily" onclick="switchViewMode('daily')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-teal-500 text-slate-950 shadow">
@@ -141,8 +141,8 @@
 
       <div class="space-y-2 pt-2">
         <h3 class="text-xs sm:text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-          體脂肪量 (左 Y 軸) vs. 體脂率 (右 Y 軸)
+          <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+          體脂率 (左 Y 軸) vs. 體脂肪量 (右 Y 軸)
         </h3>
         <div class="relative w-full h-64 sm:h-80 bg-slate-900/40 rounded-xl p-2 sm:p-3 border border-slate-700/30">
           <canvas id="fatPbfChart"></canvas>
@@ -240,11 +240,10 @@
             const bmi = parseFloat(r[6]) || null;
             const visceral = parseFloat(r[7]) || null;
             
-            // 🎯 完美校準 Google Sheet 欄位索引 (Index)
-            // r[8] = I 欄 (WHR) - 這次我們不抓它
-            const dose = r[9] || '-';  // J 欄: Dose (劑量)
-            const note = r[10] || '';  // K 欄: Note (備註)
-            const aiAnalysis = r[11] ? r[11].trim() : ''; // L 欄: AI_Analysis (AI 診斷)
+            // 校準 Google Sheet 欄位
+            const dose = r[9] || '-';  // J 欄
+            const note = r[10] || '';  // K 欄
+            const aiAnalysis = r[11] ? r[11].trim() : ''; // L 欄
 
             if(weight !== null && !isNaN(weight)) {
               rawInbodyData.push({
@@ -451,7 +450,7 @@
               tension: 0.3,
               pointRadius: 3.5,
               pointBackgroundColor: '#a855f7',
-              yAxisID: 'yWeight',
+              yAxisID: 'yWeight', // 左側主軸
             },
             {
               type: 'bar',
@@ -461,7 +460,7 @@
               borderColor: '#10b981',
               borderWidth: 1.5,
               borderRadius: 5,
-              yAxisID: 'yMuscle',
+              yAxisID: 'yMuscle', // 右側副軸
             }
           ]
         },
@@ -499,7 +498,7 @@
         }
       });
 
-      // 圖表 2: 體脂肪量 (黃) + 體脂率 (藍)
+      // 圖表 2: 體脂率 (藍) + 體脂肪量 (黃) - 統一邏輯：折線主軸，柱狀副軸
       const ctx2 = document.getElementById('fatPbfChart').getContext('2d');
       if(fatPbfChartInstance) fatPbfChartInstance.destroy();
 
@@ -509,26 +508,26 @@
           labels: labels,
           datasets: [
             {
-              type: 'bar',
-              label: '體脂肪量 (kg)',
-              data: fats,
-              backgroundColor: 'rgba(245, 158, 11, 0.35)',
-              borderColor: '#f59e0b',
-              borderWidth: 1.5,
-              borderRadius: 5,
-              yAxisID: 'yFat',
-            },
-            {
               type: 'line',
               label: '體脂率 (%)',
               data: pbfs,
-              borderColor: '#0ea5e9',
+              borderColor: '#0ea5e9', // 天空藍
               backgroundColor: '#0ea5e9',
               borderWidth: 2.5,
               tension: 0.3,
               pointRadius: 3.5,
               pointBackgroundColor: '#0ea5e9',
-              yAxisID: 'yPbf',
+              yAxisID: 'yPbf', // 左側主軸 (折線)
+            },
+            {
+              type: 'bar',
+              label: '體脂肪量 (kg)',
+              data: fats,
+              backgroundColor: 'rgba(245, 158, 11, 0.35)', // 琥珀黃
+              borderColor: '#f59e0b',
+              borderWidth: 1.5,
+              borderRadius: 5,
+              yAxisID: 'yFat', // 右側副軸 (柱狀)
             }
           ]
         },
@@ -542,24 +541,24 @@
           },
           scales: {
             x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: 'rgba(51, 65, 85, 0.3)' } },
-            yFat: {
-              type: 'linear',
-              position: 'left',
-              title: { display: true, text: '脂肪量 (kg)', color: '#f59e0b', font: { size: 10 } },
-              ticks: { color: '#f59e0b', font: { size: 9 } },
-              grid: { color: 'rgba(51, 65, 85, 0.4)' },
-              min: fatBounds.min,
-              max: fatBounds.max,
-              beginAtZero: false
-            },
             yPbf: {
               type: 'linear',
-              position: 'right',
+              position: 'left',
               title: { display: true, text: '體脂率 (%)', color: '#0ea5e9', font: { size: 10 } },
               ticks: { color: '#0ea5e9', font: { size: 9 } },
-              grid: { drawOnChartArea: false },
+              grid: { color: 'rgba(51, 65, 85, 0.4)' },
               min: pbfBounds.min,
               max: pbfBounds.max,
+              beginAtZero: false
+            },
+            yFat: {
+              type: 'linear',
+              position: 'right',
+              title: { display: true, text: '脂肪量 (kg)', color: '#f59e0b', font: { size: 10 } },
+              ticks: { color: '#f59e0b', font: { size: 9 } },
+              grid: { drawOnChartArea: false },
+              min: fatBounds.min,
+              max: fatBounds.max,
               beginAtZero: false
             }
           }
