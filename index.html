@@ -240,9 +240,11 @@
             const bmi = parseFloat(r[6]) || null;
             const visceral = parseFloat(r[7]) || null;
             
-            const dose = r[8] || '-'; // I 欄
-            const note = r[9] || '';  // J 欄
-            const aiAnalysis = r[10] ? r[10].trim() : ''; // K 欄
+            // 🎯 完美校準 Google Sheet 欄位索引 (Index)
+            // r[8] = I 欄 (WHR) - 這次我們不抓它
+            const dose = r[9] || '-';  // J 欄: Dose (劑量)
+            const note = r[10] || '';  // K 欄: Note (備註)
+            const aiAnalysis = r[11] ? r[11].trim() : ''; // L 欄: AI_Analysis (AI 診斷)
 
             if(weight !== null && !isNaN(weight)) {
               rawInbodyData.push({
@@ -316,7 +318,7 @@
         container.innerHTML = formattedText;
       } else {
         dateBadge.innerText = '系統預設';
-        container.innerHTML = '<p class="text-slate-400">尚無最新 AI 診斷紀錄，請確認 Google Sheet 第 K 欄 (ai_analysis) 是否有文字。</p>';
+        container.innerHTML = '<p class="text-slate-400">尚無最新 AI 診斷紀錄，請確認 Google Sheet 第 L 欄 (ai_analysis) 是否有文字。</p>';
       }
     }
 
@@ -479,8 +481,8 @@
               title: { display: true, text: '體重 (kg)', color: '#a855f7', font: { size: 10 } },
               ticks: { color: '#a855f7', font: { size: 9 } },
               grid: { color: 'rgba(51, 65, 85, 0.4)' },
-              min: 60, // 🔥 採納建議：將 Y 軸下限嚴格鎖定在 60kg
-              max: weightBounds.max > 86 ? weightBounds.max : 88, // 預留頂部空間
+              min: 60,
+              max: weightBounds.max > 86 ? weightBounds.max : 88,
               beginAtZero: false 
             },
             yMuscle: {
