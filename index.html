@@ -1,9 +1,4 @@
 
-
-  <!-- Google Fonts & FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -432,7 +427,7 @@
           </span>
         </h1>
         <div class="header-subtitle">
-          猛健樂療程 (2.5 mg) | 體態與血液指標雙軌監測
+          猛健樂療程 (<span id="doseSubtitle">2.5 mg</span>) | 體態與血液指標雙軌監測
         </div>
       </div>
 
@@ -447,7 +442,7 @@
           <i class="fa-solid fa-gear"></i> 設定
         </button>
         <div id="lastUpdatedBadge" style="font-size: 0.7rem; color: var(--text-sub); margin-left: 4px;">
-          最後更新 : 2026/08/13 6:50
+          最後更新 : --/-- --:--
         </div>
       </div>
     </div>
@@ -464,10 +459,10 @@
           <i class="fa-solid fa-weight-scale" style="color: var(--text-sub);"></i>
         </div>
         <div class="kpi-value-box">
-          <div class="kpi-value" id="kpiWeight">81.2<span class="kpi-unit">kg</span></div>
-          <div id="kpiWeightDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-green);">📉 -3.5 kg</div>
+          <div class="kpi-value" id="kpiWeight">--<span class="kpi-unit">kg</span></div>
+          <div id="kpiWeightDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-green);">--</div>
         </div>
-        <div class="kpi-subtext" id="kpiWeightSub">累計 -3.5 kg (基準日 84.7kg)</div>
+        <div class="kpi-subtext" id="kpiWeightSub">基準日 (7/20): 84.7 kg</div>
       </div>
 
       <!-- Card 2: Muscle -->
@@ -477,8 +472,8 @@
           <i class="fa-solid fa-dumbbell" style="color: var(--text-sub);"></i>
         </div>
         <div class="kpi-value-box">
-          <div class="kpi-value" id="kpiMuscle" style="color: var(--accent-blue);">32.3<span class="kpi-unit">kg</span></div>
-          <div id="kpiMuscleDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-blue);">➖ -0.7 kg</div>
+          <div class="kpi-value" id="kpiMuscle" style="color: var(--accent-blue);">--<span class="kpi-unit">kg</span></div>
+          <div id="kpiMuscleDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-blue);">--</div>
         </div>
         <div class="kpi-subtext" style="color: var(--accent-blue);">肌肉防禦固若金湯</div>
       </div>
@@ -490,10 +485,10 @@
           <i class="fa-solid fa-percent" style="color: var(--text-sub);"></i>
         </div>
         <div class="kpi-value-box">
-          <div class="kpi-value" id="kpiPBF" style="color: var(--accent-purple);">29.8<span class="kpi-unit">%</span></div>
-          <div id="kpiPBFDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-purple);">📉 -1.6%</div>
+          <div class="kpi-value" id="kpiPBF" style="color: var(--accent-purple);">--<span class="kpi-unit">%</span></div>
+          <div id="kpiPBFDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-purple);">--</div>
         </div>
-        <div class="kpi-subtext" id="kpiFatSub">純脂 24.2 kg</div>
+        <div class="kpi-subtext" id="kpiFatSub">純脂 -- kg</div>
       </div>
 
       <!-- Card 4: Goal Progress -->
@@ -503,12 +498,12 @@
           <i class="fa-solid fa-bullseye" style="color: var(--accent-yellow);"></i>
         </div>
         <div>
-          <div class="kpi-value" id="goalProgressPct" style="color: var(--accent-yellow); margin-top: 4px;">52.2%</div>
+          <div class="kpi-value" id="goalProgressPct" style="color: var(--accent-yellow); margin-top: 4px;">--%</div>
           <div class="progress-track">
-            <div class="progress-fill" id="goalProgressBar" style="width: 52.2%;"></div>
+            <div class="progress-fill" id="goalProgressBar" style="width: 0%;"></div>
           </div>
         </div>
-        <div class="kpi-subtext" id="goalRemainingText">尚餘 3.2 kg 即可達標</div>
+        <div class="kpi-subtext" id="goalRemainingText">尚餘 -- kg 即可達標</div>
       </div>
     </div>
 
@@ -519,11 +514,11 @@
           <i class="fa-solid fa-robot"></i> 🤖 AI 體態顧問最新診斷解析
         </div>
         <div id="aiAnalysisDate" style="font-size: 0.7rem; color: var(--text-muted); background-color: #0f172a; padding: 2px 8px; border-radius: 4px;">
-          最新更新：2026/08/13
+          讀取中...
         </div>
       </div>
       <div id="aiAnalysisContent" style="margin-top: 8px; font-size: 0.8rem; color: #e2e8f0; line-height: 1.6;">
-        🎯 減脂含金量高達 88.5%：純脂肪累積流失 2.4kg，肌肉完全零流失，準備升級 5.0mg！
+        載入最新 AI 解析摘要中...
       </div>
     </div>
 
@@ -582,7 +577,7 @@
       </div>
     </div>
 
-    <!-- Blood Test Section (Matching Image 2 Exactly!) -->
+    <!-- Blood Test Section (Matching Image 2) -->
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <div class="section-title" style="margin-bottom: 0; color: #f43f5e;">
@@ -727,18 +722,18 @@
     const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/gviz/tq?tqx=out:csv&gid=2019214985";
     const DEFAULT_BLOOD_CSV_URL = "https://docs.google.com/spreadsheets/d/1SgiX4vWzb4r62eqQDkse8oQeHvFthViSC_tMREgnDUY/gviz/tq?tqx=out:csv";
 
-    // Clean Backup Sample Data (Reflecting true state with empty ai_analysis for previous rows)
+    // Standard fallback sample data with correct column alignment matching raw Google Sheet
     const SAMPLE_RAW_DATA = [
-      ["Date", "Weight", "Skeletal_Muscle", "Fat_Mass", "PBF", "BMI", "Visceral_Fat", "WHR", "BMR", "dose", "ai_analysis"],
-      ["2026/07/20", "84.7", "33.0", "26.6", "31.4", "29.5", "10", "0.92", "1720", "2.5", ""],
-      ["2026/07/27", "84.3", "32.9", "25.9", "30.7", "29.3", "9", "0.87", "1710", "2.5", ""],
-      ["2026/07/29", "82.8", "32.5", "25.5", "30.8", "28.8", "10", "0.88", "1700", "2.5", ""],
-      ["2026/07/30", "82.4", "32.7", "24.9", "30.2", "28.7", "9", "0.88", "1695", "2.5", ""],
-      ["2026/08/03", "82.6", "32.9", "24.7", "29.9", "28.8", "9", "0.88", "1700", "2.5", ""],
-      ["2026/08/05", "82.1", "32.9", "24.5", "29.6", "28.6", "9", "0.88", "1690", "2.5", ""],
-      ["2026/08/06", "81.6", "32.5", "24.5", "30.0", "28.4", "9", "0.88", "1685", "2.5", ""],
-      ["2026/08/10", "81.5", "32.4", "24.4", "29.9", "28.4", "9", "0.88", "1682", "2.5", ""],
-      ["2026/08/13", "81.2", "32.3", "24.2", "29.8", "28.3", "9", "0.88", "1680", "2.5", "🎯 減脂含金量高達 88.5%：純脂肪累積流失 2.4kg，肌肉完全零流失，準備升級 5.0mg！"]
+      ["Date", "Time", "Weight", "Skeletal_Muscle", "Fat_Mass", "PBF", "BMI", "Visceral_Fat", "WHR", "BMR", "dose", "Note", "ai_analysis"],
+      ["2026/07/20", "06:50", "84.7", "33.0", "26.6", "31.4", "29.5", "10", "0.92", "1720", "2.5", "", ""],
+      ["2026/07/27", "06:50", "84.3", "32.9", "25.9", "30.7", "29.3", "9", "0.87", "1710", "2.5", "", ""],
+      ["2026/07/29", "06:50", "82.8", "32.5", "25.5", "30.8", "28.8", "10", "0.88", "1700", "2.5", "", ""],
+      ["2026/07/30", "06:50", "82.4", "32.7", "24.9", "30.2", "28.7", "9", "0.88", "1695", "2.5", "", ""],
+      ["2026/08/03", "06:50", "82.6", "32.9", "24.7", "29.9", "28.8", "9", "0.88", "1700", "2.5", "", ""],
+      ["2026/08/05", "06:50", "82.1", "32.9", "24.5", "29.6", "28.6", "9", "0.88", "1690", "2.5", "", ""],
+      ["2026/08/06", "06:50", "81.6", "32.5", "24.5", "30.0", "28.4", "9", "0.88", "1685", "2.5", "", ""],
+      ["2026/08/10", "06:50", "81.5", "32.4", "24.4", "29.9", "28.4", "9", "0.88", "1682", "2.5", "", ""],
+      ["2026/08/13", "06:50", "81.2", "32.3", "24.2", "29.8", "28.3", "9", "0.88", "1680", "2.5", "", "🎯 減脂含金量高達 88.5%：純脂肪累積流失 2.4kg，肌肉完全零流失，準備升級 5.0mg！"]
     ];
 
     let globalDailyData = [];
@@ -879,37 +874,90 @@
       return result;
     }
 
+    // Helper: Dynamic Column Finder by Keyword Matching
+    function findColIndex(headers, keywords) {
+      if (!headers || headers.length === 0) return -1;
+      for (const kw of keywords) {
+        for (let i = 0; i < headers.length; i++) {
+          const h = (headers[i] || '').toString().toLowerCase().trim().replace(/"/g, '');
+          if (h.includes(kw.toLowerCase())) {
+            return i;
+          }
+        }
+      }
+      return -1;
+    }
+
+    // Clean numeric value extractor
+    function parseNum(val) {
+      if (val === undefined || val === null) return 0;
+      const str = val.toString().replace(/"/g, '').trim();
+      const match = str.match(/[-+]?\d*\.?\d+/);
+      return match ? parseFloat(match[0]) : 0;
+    }
+
     function processDataRows(rows) {
       if (!rows || rows.length === 0) return 0;
 
-      let dataRows = rows;
-      if (rows[0][0] && rows[0][0].toLowerCase().includes("date")) {
-        dataRows = rows.slice(1);
+      let headers = rows[0];
+      let dataRows = rows.slice(1);
+
+      // 1. Dynamic Column Index Detection from Header Row
+      let colDate = findColIndex(headers, ['date', '日期']);
+      let colWeight = findColIndex(headers, ['weight', '體重']);
+      let colMuscle = findColIndex(headers, ['skeletal', 'muscle', '骨骼肌']);
+      let colFatMass = findColIndex(headers, ['fat_mass', '體脂肪量', '體脂量']);
+      let colPBF = findColIndex(headers, ['pbf', '體脂率']);
+      let colBMI = findColIndex(headers, ['bmi']);
+      let colVisceral = findColIndex(headers, ['visceral', '內臟脂肪']);
+      let colWHR = findColIndex(headers, ['whr', '腰臀']);
+      let colBMR = findColIndex(headers, ['bmr', '基礎代謝', '基代']);
+      let colDose = findColIndex(headers, ['dose', '劑量']);
+      let colAI = findColIndex(headers, ['ai_analysis', 'ai', '診斷', '解析']);
+
+      // 2. Intelligent Fallbacks if headers weren't found
+      if (colDate === -1) colDate = 0;
+      if (colWeight === -1) {
+        // If col 1 looks like Weight (>40), use 1; else if col 2 looks like Weight, use 2
+        colWeight = 2; 
+      }
+      if (colMuscle === -1) colMuscle = colWeight + 1;
+      if (colFatMass === -1) colFatMass = colWeight + 2;
+      if (colPBF === -1) colPBF = colWeight + 3;
+      if (colBMI === -1) colBMI = colWeight + 4;
+      if (colVisceral === -1) colVisceral = colWeight + 5;
+      if (colWHR === -1) colWHR = colWeight + 6;
+      if (colBMR === -1) colBMR = colWeight + 7;
+      if (colDose === -1) colDose = colWeight + 8;
+      if (colAI === -1) {
+        // AI is usually the last column or index 12
+        colAI = headers.length > 12 ? 12 : headers.length - 1;
       }
 
       globalDailyData = [];
       let lastDose = "2.5";
 
       dataRows.forEach(row => {
-        if (!row || !row[0] || row[0].trim() === "" || row[0].startsWith("<")) return;
+        if (!row || !row[colDate] || row[colDate].trim() === "" || row[colDate].startsWith("<")) return;
 
-        const dateStr = row[0].trim().replace(/"/g, '');
+        const dateStr = (row[colDate] || '').toString().trim().replace(/"/g, '');
         if (!/\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/.test(dateStr)) return;
 
-        const weight = parseFloat(row[1]) || 0;
-        const muscle = parseFloat(row[2]) || 0;
-        const fatMass = parseFloat(row[3]) || 0;
-        const pbf = parseFloat(row[4]) || 0;
-        const bmi = parseFloat(row[5]) || 0;
-        const visceral = parseInt(row[6]) || 0;
-        const whr = parseFloat(row[7]) || 0;
-        const bmr = parseInt(row[8]) || 0;
+        const weight = parseNum(row[colWeight]);
+        const muscle = parseNum(row[colMuscle]);
+        const fatMass = parseNum(row[colFatMass]);
+        const pbf = parseNum(row[colPBF]);
+        const bmi = parseNum(row[colBMI]);
+        const visceral = Math.round(parseNum(row[colVisceral]));
+        const whr = parseNum(row[colWHR]);
+        const bmr = Math.round(parseNum(row[colBMR]));
 
-        let dose = row[9] ? row[9].trim().replace(/"/g, '') : lastDose;
+        let rawDose = row[colDose] ? row[colDose].toString().trim().replace(/"/g, '') : '';
+        let dose = rawDose ? rawDose : lastDose;
         if (!dose) dose = lastDose;
         lastDose = dose;
 
-        const aiAnalysis = row[10] ? row[10].trim().replace(/"/g, '') : "";
+        const aiAnalysis = row[colAI] ? row[colAI].toString().trim().replace(/"/g, '') : "";
 
         globalDailyData.push({
           date: dateStr, weight, muscle, fatMass, pbf, bmi, visceral, whr, bmr, dose, aiAnalysis
@@ -996,7 +1044,14 @@
       if (globalDailyData.length === 0) return;
 
       const latest = globalDailyData[globalDailyData.length - 1];
-      const baseline = globalDailyData[0];
+
+      const doseElem = document.getElementById('doseSubtitle');
+      if (doseElem) doseElem.innerText = `${latest.dose} mg`;
+
+      const lastUpdateElem = document.getElementById('lastUpdatedBadge');
+      if (lastUpdateElem) {
+        lastUpdateElem.innerText = `最後更新 : ${latest.date}`;
+      }
 
       const aiContainer = document.getElementById('aiAnalysisContent');
       const aiDateBadge = document.getElementById('aiAnalysisDate');
@@ -1229,7 +1284,7 @@
                 title: { display: true, text: '體脂率 (%)', color: '#c084fc', font: { size: 10, weight: 'bold' } },
                 min: Math.floor(Math.min(...pbfs) - 2),
                 max: Math.ceil(Math.max(...pbfs) + 2),
-                grid: { drawOnChartArea: false },
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
                 ticks: { color: '#c084fc' }
               }
             }
