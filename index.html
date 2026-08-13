@@ -74,9 +74,9 @@
   </div>
 
   <script>
-    // 🔗 貼上您的 Google Sheets 發布 CSV 網址（已帶入您專屬的 Google Sheet 匯出連結）
-    const INBODY_CSV_URL = 'https://docs.google.com/spreadsheets/d/15syuSTOf98jrXTvrbwwFPnSp8mDc3_ACfxOw-8e_kyQ/export?format=csv';
-    const BLOOD_CSV_URL = 'https://docs.google.com/spreadsheets/d/1Ms1gMCA48C06A7hrd04j3J7uSpDyX5M1wg8qSIVsKYg/export?format=csv';
+    // 🔗 已帶入全新建立的專屬 Google Sheets CSV 匯出網址
+    const INBODY_CSV_URL = 'https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/export?format=csv';
+    const BLOOD_CSV_URL = 'https://docs.google.com/spreadsheets/d/1SgiX4vWzb4r62eqQDkse8oQeHvFthViSC_tMREgnDUY/export?format=csv';
 
     function parseCSV(url) {
       return new Promise((resolve) => {
@@ -164,12 +164,12 @@
           <div class="text-amber-400 text-xs font-bold mb-2">🎯 血糖與代謝區</div>
           <div class="flex justify-between items-center py-1">
             <span class="text-sm">糖化血色素 (HbA1c)</span>
-            <span class="font-bold text-amber-300">${latest.HbA1c}</span>
+            <span class="font-bold text-amber-300">${latest.HbA1c} %</span>
           </div>
           <div class="text-xs text-slate-400">目標：&lt; 5.7 % (脫離前期)</div>
           <div class="flex justify-between items-center py-1 mt-2 border-t border-slate-800">
             <span class="text-sm">空腹血糖 (Glucose)</span>
-            <span class="font-bold text-amber-300">${latest.AC_Glucose}</span>
+            <span class="font-bold text-amber-300">${latest.AC_Glucose} mg/dl</span>
           </div>
           <div class="text-xs text-slate-400">目標：&lt; 100 mg/dl</div>
         </div>
@@ -178,12 +178,12 @@
           <div class="text-purple-400 text-xs font-bold mb-2">🎯 血脂與心血管區</div>
           <div class="flex justify-between items-center py-1">
             <span class="text-sm">壞膽固醇 (LDL-C)</span>
-            <span class="font-bold text-purple-300">${latest.LDL_C}</span>
+            <span class="font-bold text-purple-300">${latest.LDL_C} mg/dl</span>
           </div>
           <div class="text-xs text-slate-400">目標：&lt; 130 mg/dl</div>
           <div class="flex justify-between items-center py-1 mt-2 border-t border-slate-800">
             <span class="text-sm">三酸甘油酯 (TG)</span>
-            <span class="font-bold text-emerald-400">${latest.Triglyceride} 🌟</span>
+            <span class="font-bold text-emerald-400">${latest.Triglyceride} mg/dl 🌟</span>
           </div>
           <div class="text-xs text-slate-400">維持：&lt; 100 mg/dl</div>
         </div>
@@ -197,7 +197,7 @@
           <div class="text-xs text-slate-400">參考值：&ge; 90</div>
           <div class="flex justify-between items-center py-1 mt-2 border-t border-slate-800">
             <span class="text-sm">肝功能 (ALT/sGPT)</span>
-            <span class="font-bold text-emerald-400">${latest.ALT} 🌟</span>
+            <span class="font-bold text-emerald-400">${latest.ALT} U/L 🌟</span>
           </div>
           <div class="text-xs text-slate-400">參考值：&lt; 40~50</div>
         </div>
