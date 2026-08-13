@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InBody & Health Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8">
+
+  <div class="max-w-6xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-700 pb-4">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-blue-400">📊 個人健康與體態儀表板</h1>
+        <p class="text-slate-400 text-sm mt-1">猛健樂療程 (2.5 mg) | 體態與血液指標雙軌監測</p>
+      </div>
+      <div class="mt-2 md:mt-0 text-xs bg-slate-800 px-3 py-2 rounded-lg border border-slate-700 text-slate-300">
+        最後更新：<span id="last-updated">載入中...</span>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl shadow-lg">
+        <div class="text-slate-400 text-xs font-semibold">當前體重</div>
+        <div class="text-2xl font-bold text-white mt-1" id="kpi-weight">-- kg</div>
+        <div class="text-xs text-emerald-400 mt-1" id="kpi-weight-change">累計減重 --</div>
+      </div>
+      <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl shadow-lg">
+        <div class="text-slate-400 text-xs font-semibold">骨骼肌量</div>
+        <div class="text-2xl font-bold text-blue-400 mt-1" id="kpi-muscle">-- kg</div>
+        <div class="text-xs text-slate-400 mt-1">肌肉防禦固若金湯</div>
+      </div>
+      <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl shadow-lg">
+        <div class="text-slate-400 text-xs font-semibold">體脂肪率</div>
+        <div class="text-2xl font-bold text-purple-400 mt-1" id="kpi-fat-pct">-- %</div>
+        <div class="text-xs text-purple-300 mt-1" id="kpi-fat-mass">純脂 -- kg</div>
+      </div>
+      <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl shadow-lg">
+        <div class="text-slate-400 text-xs font-semibold">階段一目標進度 (78kg)</div>
+        <div class="text-2xl font-bold text-amber-400 mt-1" id="kpi-progress">-- %</div>
+        <div class="w-full bg-slate-700 h-2 rounded-full mt-2 overflow-hidden">
+          <div id="progress-bar" class="bg-amber-400 h-2 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow-lg">
+        <h3 class="text-md font-bold text-slate-200 mb-4">📉 體重與骨骼肌量趨勢</h3>
+        <canvas id="weightMuscleChart"></canvas>
+      </div>
+      <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow-lg">
+        <h3 class="text-md font-bold text-slate-200 mb-4">🔥 體脂肪量與體脂率變化</h3>
+        <canvas id="fatChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Blood Work Section -->
+    <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow-lg space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <h2 class="text-lg font-bold text-red-400">🩸 血液檢驗動態追蹤 (最新報告：<span id="blood-date">--</span>)</h2>
+        <span class="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded">追蹤頻率：每 3 個月</span>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="blood-cards-container">
+        <div class="text-slate-400 text-sm">載入血液數據中...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 🔗 貼上您的 Google Sheets 發布 CSV 網址（已帶入您專屬的 Google Sheet 匯出連結）
+    const INBODY_CSV_URL = 'https://docs.google.com/spreadsheets/d/15syuSTOf98jrXTvrbwwFPnSp8mDc3_ACfxOw-8e_kyQ/export?format=csv';
+    const BLOOD_CSV_URL = 'https://docs.google.com/spreadsheets/d/1Ms1gMCA48C06A7hrd04j3J7uSpDyX5M1wg8qSIVsKYg/export?format=csv';
+
+    function parseCSV(url) {
+      return new Promise((resolve) => {
+        Papa.parse(url, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => resolve(results.data)
+        });
+      });
+    }
+
+    async function loadAllData() {
+      try {
+        const [inbodyData, bloodData] = await Promise.all([
+          parseCSV(INBODY_CSV_URL),
+          parseCSV(BLOOD_CSV_URL)
+        ]);
+
+        const validInbody = inbodyData.filter(d => d.Date && d.Weight);
+        const validBlood = bloodData.filter(d => d.Date && d.HbA1c);
+
+        if (validInbody.length > 0) renderInBody(validInbody);
+        if (validBlood.length > 0) renderBlood(validBlood);
+      } catch (err) {
+        console.error('Error loading data:', err);
+      }
+    }
+
+    function renderInBody(data) {
+      const latest = data[data.length - 1];
+      const baselineWeight = 84.7;
+      const targetWeight = 78.0;
+
+      const currentWeight = parseFloat(latest.Weight);
+      const currentMuscle = parseFloat(latest.Muscle);
+      const currentFatPct = parseFloat(latest.Fat_Pct);
+      const currentFatMass = parseFloat(latest.Fat_Mass);
+
+      document.getElementById('kpi-weight').innerText = `${currentWeight} kg`;
+      const weightDiff = (currentWeight - baselineWeight).toFixed(1);
+      document.getElementById('kpi-weight-change').innerText = `累計 ${weightDiff} kg`;
+      document.getElementById('kpi-muscle').innerText = `${currentMuscle} kg`;
+      document.getElementById('kpi-fat-pct').innerText = `${currentFatPct} %`;
+      document.getElementById('kpi-fat-mass').innerText = `純脂 ${currentFatMass} kg`;
+
+      const progress = (((baselineWeight - currentWeight) / (baselineWeight - targetWeight)) * 100).toFixed(1);
+      document.getElementById('kpi-progress').innerText = `${progress}%`;
+      document.getElementById('progress-bar').style.width = `${Math.min(Math.max(progress, 0), 100)}%`;
+      document.getElementById('last-updated').innerText = `${latest.Date} ${latest.Time || ''}`;
+
+      // Render Charts
+      const labels = data.map(d => d.Date);
+      new Chart(document.getElementById('weightMuscleChart'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: '體重 (kg)', data: data.map(d => parseFloat(d.Weight)), borderColor: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.1)', fill: true, tension: 0.3 },
+            { label: '骨骼肌 (kg)', data: data.map(d => parseFloat(d.Muscle)), borderColor: '#3b82f6', borderDash: [5, 5], tension: 0.3 }
+          ]
+        },
+        options: { responsive: true, plugins: { legend: { labels: { color: '#cbd5e1' } } } }
+      });
+
+      new Chart(document.getElementById('fatChart'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: '體脂率 (%)', data: data.map(d => parseFloat(d.Fat_Pct)), borderColor: '#c084fc', backgroundColor: 'rgba(192,132,252,0.1)', fill: true, tension: 0.3 }
+          ]
+        },
+        options: { responsive: true, plugins: { legend: { labels: { color: '#cbd5e1' } } } }
+      });
+    }
+
+    function renderBlood(data) {
+      const latest = data[data.length - 1];
+      document.getElementById('blood-date').innerText = latest.Date;
+
+      const container = document.getElementById('blood-cards-container');
+      container.innerHTML = `
+        <div class="bg-slate-900 border border-slate-700 p-4 rounded-lg">
+          <div class="text-amber-400 text-xs font-bold mb-2">🎯 血糖與代謝區</div>
+          <div class="flex justify-between items-center py-1">
+            <span class="text-sm">糖化血色素 (HbA1c)</span>
+            <span class="font-bold text-amber-300">${latest.HbA1c}</span>
+          </div>
+          <div class="text-xs text-slate-400">目標：&lt; 5.7 % (脫離前期)</div>
+          <div class="flex justify-between items-center py-1 mt-2 border-t border-slate-800">
+            <span class="text-sm">空腹血糖 (Glucose)</span>
+            <span class="font-bold text-amber-300">${latest.AC_Glucose}</span>
+          </div>
+          <div class="text-xs text-slate-400">目標：&lt; 100 mg/dl</div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-700 p-4 rounded-lg">
+          <div class="text-purple-400 text-xs font-bold mb-2">🎯 血脂與心血管區</div>
+          <div class="flex justify-between items-center py-1">
+            <span class="text-sm">壞膽固醇 (LDL-C)</span>
+            <span class="font-bold text-purple-300">${latest.LDL_C}</span>
+          </div>
+          <div class="text-xs text-slate-400">目標：&lt; 130 mg/dl</div>
+          <div class="flex justify-between items-center py-1 mt-2 border-t border-slate-800">
+            <span class="text-sm">三酸甘油酯 (TG)</span>
+            <span class="font-bold text-emerald-400">${latest.Triglyceride} 🌟</span>
+          </div>
+          <div class="text-xs text-slate-400">維持：&lt; 100 mg/dl</div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-700 p-4 rounded-lg">
+          <div class="text-emerald-400 text-xs font-bold mb-2">🌟 肝腎功能區</div>
+          <div class="flex justify-between items-center py-1">
+            <span class="text-sm">腎功能 (eGFR)</span>
+            <span class="font-bold text-emerald-400">${latest.eGFR} 🌟</span>
+          </div>
+          <div class="text-xs text-slate-400">參考值：&ge; 90</div>
+          <div class="flex justify-between items-center py-1 mt-2 border-t border-slate-800">
+            <span class="text-sm">肝功能 (ALT/sGPT)</span>
+            <span class="font-bold text-emerald-400">${latest.ALT} 🌟</span>
+          </div>
+          <div class="text-xs text-slate-400">參考值：&lt; 40~50</div>
+        </div>
+      `;
+    }
+
+    window.onload = loadAllData;
+  </script>
+</body>
+</html>
