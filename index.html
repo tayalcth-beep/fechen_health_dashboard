@@ -1,855 +1,468 @@
 
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Chart.js CDN + Annotation Plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 
   <style>
-    /* Complete Self-Contained Native Dark Theme CSS */
-    :root {
-      --bg-color: #0b1120;
-      --card-bg: #151e32;
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover-border: rgba(255, 255, 255, 0.18);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-sub: #64748b;
-      --accent-blue: #38bdf8;
-      --accent-green: #10b981;
-      --accent-purple: #c084fc;
-      --accent-yellow: #f59e0b;
-      --accent-rose: #f43f5e;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     body {
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      line-height: 1.5;
-      padding-bottom: 40px;
+      background-color: #0f172a;
+      color: #f8fafc;
     }
-
-    /* Header */
-    header {
-      background-color: rgba(15, 23, 42, 0.9);
-      border-bottom: 1px solid var(--card-border);
-      position: sticky;
-      top: 0;
-      z-index: 50;
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
       backdrop-filter: blur(12px);
-      padding: 16px 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
     }
-
-    .header-container {
-      max-width: 1280px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .header-title-box h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .header-subtitle {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn {
-      background-color: #1e293b;
-      color: #e2e8f0;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
+    .btn-tab {
       transition: all 0.2s ease;
     }
-
-    .btn:hover {
-      background-color: #334155;
+    .btn-tab.active {
+      background-color: #10b981;
       color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
-
-    .btn-rose {
-      background-color: rgba(136, 19, 55, 0.5);
-      color: #fecdd3;
-      border-color: rgba(225, 29, 72, 0.4);
-    }
-    .btn-rose:hover {
-      background-color: rgba(159, 18, 57, 0.8);
-    }
-
-    .badge-sync {
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 9999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: 500;
-    }
-
-    .badge-live {
-      background-color: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .badge-offline {
-      background-color: rgba(245, 158, 11, 0.15);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    .dot {
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
-      border-radius: 50%;
     }
-    .dot-green { background-color: #34d399; }
-    .dot-yellow { background-color: #fbbf24; }
-
-    /* Layout Containers */
-    .main-container {
-      max-width: 1280px;
-      margin: 24px auto 0 auto;
-      padding: 0 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
     }
-
-    /* Cards Base */
-    .card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 16px 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-    }
-
-    /* Top KPI Cards Grid */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-
-    .kpi-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .kpi-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .kpi-value-box {
-      margin-top: 8px;
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-    }
-
-    .kpi-value {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .kpi-unit {
-      font-size: 0.8rem;
-      font-weight: 400;
-      color: var(--text-muted);
-      margin-left: 2px;
-    }
-
-    .kpi-subtext {
-      font-size: 0.7rem;
-      color: var(--text-sub);
-      margin-top: 4px;
-    }
-
-    /* Progress Bar */
-    .progress-track {
-      width: 100%;
-      height: 8px;
-      background-color: #1e293b;
-      border-radius: 9999px;
-      overflow: hidden;
-      margin-top: 6px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #f59e0b, #eab308);
-      border-radius: 9999px;
-      transition: width 0.5s ease;
-    }
-
-    /* Tab Controls Bar */
-    .control-bar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-    }
-
-    .tab-group {
-      display: inline-flex;
-      background-color: #0f172a;
-      padding: 3px;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-    }
-
-    .tab-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .tab-btn.active {
-      background-color: var(--accent-green);
-      color: #ffffff;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
-    }
-
-    .legend-box {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    /* Charts Grid */
-    .charts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-      gap: 20px;
-    }
-
-    .chart-container {
-      position: relative;
-      height: 300px;
-      width: 100%;
-      margin-top: 12px;
-    }
-
-    /* Blood Test Section */
-    .section-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .blood-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    .blood-subcard {
-      background-color: #0f172a;
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 14px;
-    }
-
-    .blood-subcard-title {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #e2e8f0;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .blood-item {
-      margin-bottom: 8px;
-    }
-    .blood-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .blood-item-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-
-    .blood-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .blood-val {
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
-
-    .blood-target {
-      font-size: 0.68rem;
-      color: var(--text-sub);
-    }
-
-    /* AI Insight Banner */
-    .ai-banner {
-      border-left: 4px solid var(--accent-green);
-    }
-
-    /* Table Section */
-    .table-wrapper {
-      overflow-x: auto;
-      margin-top: 12px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.75rem;
-    }
-
-    th {
-      background-color: #0f172a;
-      color: var(--text-muted);
-      padding: 10px 12px;
-      font-weight: 600;
-      border-bottom: 1px solid var(--card-border);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      white-space: nowrap;
-    }
-
-    tr:hover {
-      background-color: rgba(255, 255, 255, 0.02);
-    }
-
-    /* Config Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(2, 6, 23, 0.85);
-      backdrop-filter: blur(6px);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-overlay.hidden {
-      display: none;
-    }
-
-    .modal-box {
-      width: 100%;
-      max-width: 500px;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      background-color: #0f172a;
-      border: 1px solid var(--card-border);
-      color: #f8fafc;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-family: monospace;
-      outline: none;
-    }
-
-    input[type="text"]:focus {
-      border-color: var(--accent-green);
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
     }
   </style>
 </head>
-<body>
+<body class="min-h-screen pb-12">
 
   <!-- Top Header -->
-  <header>
-    <div class="header-container">
-      <div class="header-title-box">
-        <h1>
-          📊 個人健康與體態儀表板
-          <span id="syncBadge" class="badge-sync badge-offline">
-            <span class="dot dot-yellow"></span> 同步中...
-          </span>
-        </h1>
-        <div class="header-subtitle">
-          猛健樂療程 (<span id="doseSubtitle">2.5 mg</span>) | 體態與血液指標雙軌監測
+  <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+          <i class="fa-solid font-bold fa-chart-line text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            InBody 體態數據與猛健樂療程戰情室
+            <span id="syncBadge" class="text-xs font-normal px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Google Sheets 已連線
+            </span>
+          </h1>
+          <p id="headerSubtitle" class="text-xs text-slate-400 mt-0.5">
+            💊 猛健乐療程：<span id="currentDoseBadge" class="font-semibold text-emerald-400">2.5 mg</span> ｜ 療程起始：2026/07/16 ｜ 算週平均精準追蹤
+          </p>
         </div>
       </div>
 
-      <div class="header-actions">
-        <a id="bloodTestLink" href="https://docs.google.com/spreadsheets/d/1SgiX4vWzb4r62eqQDkse8oQeHvFthViSC_tMREgnDUY/edit" target="_blank" class="btn btn-rose">
-          🩸 血液報告
-        </a>
-        <button onclick="refreshData()" class="btn">
-          <i class="fa-solid fa-rotate text-emerald-400" id="refreshIcon"></i> 重新同步
+      <!-- Action & Config Controls -->
+      <div class="flex items-center space-x-3">
+        <button onclick="refreshData()" class="px-3.5 py-2 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
+          <i class="fa-solid fa-rotate text-emerald-400" id="refreshIcon"></i>
+          重新同步數據
         </button>
-        <button onclick="toggleConfigModal()" class="btn">
-          <i class="fa-solid fa-gear"></i> 設定
+        <button onclick="toggleConfigModal()" class="px-3.5 py-2 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
+          <i class="fa-solid fa-gear text-slate-400"></i>
+          設定
         </button>
-        <div id="lastUpdatedBadge" style="font-size: 0.7rem; color: var(--text-sub); margin-left: 4px;">
-          最後更新 : --/-- --:--
-        </div>
       </div>
     </div>
   </header>
 
-  <div class="main-container">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-6">
 
-    <!-- Top 4 KPI Cards -->
-    <div class="kpi-grid">
-      <!-- Card 1: Weight -->
-      <div class="card kpi-card">
-        <div class="kpi-header">
-          <span>當前體重</span>
-          <i class="fa-solid fa-weight-scale" style="color: var(--text-sub);"></i>
+    <!-- AI Insight Banner (Column K: ai_analysis) -->
+    <div id="aiAnalysisContainer" class="glass-card p-5 border-l-4 border-l-emerald-500 relative overflow-hidden">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm tracking-wide uppercase">
+          <i class="fa-solid fa-robot text-base"></i>
+          🤖 AI 體態顧問最新診斷解析
         </div>
-        <div class="kpi-value-box">
-          <div class="kpi-value" id="kpiWeight">--<span class="kpi-unit">kg</span></div>
-          <div id="kpiWeightDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-green);">--</div>
+        <div id="aiAnalysisDate" class="text-xs text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700/50">
+          最新更新：2026/08/13
         </div>
-        <div class="kpi-subtext" id="kpiWeightSub">基準日 (7/20): 84.7 kg</div>
+      </div>
+      <div id="aiAnalysisContent" class="mt-3 text-sm text-slate-200 leading-relaxed font-normal">
+        載入最新 AI 分析摘要中...
+      </div>
+    </div>
+
+    <!-- KPI Highlight Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+
+      <!-- Weight Card -->
+      <div class="glass-card p-4">
+        <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+          <span>目前體重</span>
+          <i class="fa-solid fa-weight-scale text-slate-500"></i>
+        </div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span id="kpiWeight" class="text-2xl font-bold text-white">-- <span class="text-xs font-normal text-slate-400">kg</span></span>
+          <span id="kpiWeightDiff" class="text-xs font-medium text-emerald-400">--</span>
+        </div>
+        <div class="mt-1 text-[11px] text-slate-400">基準日 (7/20): 84.7 kg</div>
       </div>
 
-      <!-- Card 2: Muscle -->
-      <div class="card kpi-card">
-        <div class="kpi-header">
+      <!-- Skeletal Muscle Card -->
+      <div class="glass-card p-4">
+        <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
           <span>骨骼肌量</span>
-          <i class="fa-solid fa-dumbbell" style="color: var(--text-sub);"></i>
+          <i class="fa-solid fa-dumbbell text-slate-500"></i>
         </div>
-        <div class="kpi-value-box">
-          <div class="kpi-value" id="kpiMuscle" style="color: var(--accent-blue);">--<span class="kpi-unit">kg</span></div>
-          <div id="kpiMuscleDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-blue);">--</div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span id="kpiMuscle" class="text-2xl font-bold text-emerald-400">-- <span class="text-xs font-normal text-slate-400">kg</span></span>
+          <span id="kpiMuscleDiff" class="text-xs font-medium text-emerald-400">--</span>
         </div>
-        <div class="kpi-subtext" style="color: var(--accent-blue);">肌肉防禦固若金湯</div>
+        <div class="mt-1 text-[11px] text-slate-400">基準日 (7/20): 33.0 kg</div>
       </div>
 
-      <!-- Card 3: Body Fat % -->
-      <div class="card kpi-card">
-        <div class="kpi-header">
-          <span>體脂肪率</span>
-          <i class="fa-solid fa-percent" style="color: var(--text-sub);"></i>
+      <!-- Fat Mass Card -->
+      <div class="glass-card p-4">
+        <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+          <span>體脂肪量</span>
+          <i class="fa-solid fa-fire text-slate-500"></i>
         </div>
-        <div class="kpi-value-box">
-          <div class="kpi-value" id="kpiPBF" style="color: var(--accent-purple);">--<span class="kpi-unit">%</span></div>
-          <div id="kpiPBFDiff" style="font-size: 0.75rem; font-weight: 600; color: var(--accent-purple);">--</div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span id="kpiFatMass" class="text-2xl font-bold text-amber-400">-- <span class="text-xs font-normal text-slate-400">kg</span></span>
+          <span id="kpiFatMassDiff" class="text-xs font-medium text-emerald-400">--</span>
         </div>
-        <div class="kpi-subtext" id="kpiFatSub">純脂 -- kg</div>
+        <div class="mt-1 text-[11px] text-slate-400">基準日 (7/20): 26.6 kg</div>
       </div>
 
-      <!-- Card 4: Goal Progress -->
-      <div class="card kpi-card">
-        <div class="kpi-header">
-          <span>階段一目標進度 (78kg)</span>
-          <i class="fa-solid fa-bullseye" style="color: var(--accent-yellow);"></i>
+      <!-- Body Fat % Card -->
+      <div class="glass-card p-4">
+        <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+          <span>體脂率 (PBF)</span>
+          <i class="fa-solid fa-percent text-slate-500"></i>
         </div>
-        <div>
-          <div class="kpi-value" id="goalProgressPct" style="color: var(--accent-yellow); margin-top: 4px;">--%</div>
-          <div class="progress-track">
-            <div class="progress-fill" id="goalProgressBar" style="width: 0%;"></div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span id="kpiPBF" class="text-2xl font-bold text-teal-300">-- <span class="text-xs font-normal text-slate-400">%</span></span>
+          <span id="kpiPBFDiff" class="text-xs font-medium text-emerald-400">--</span>
+        </div>
+        <div class="mt-1 text-[11px] text-slate-400">目標: &lt; 25.0%</div>
+      </div>
+
+      <!-- Visceral Fat Card -->
+      <div class="glass-card p-4">
+        <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+          <span>內臟脂肪等級</span>
+          <i class="fa-solid fa-heart-pulse text-slate-500"></i>
+        </div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span id="kpiVisceral" class="text-2xl font-bold text-cyan-400">-- <span class="text-xs font-normal text-slate-400">級</span></span>
+          <span id="kpiVisceralDiff" class="text-xs font-medium text-emerald-400">--</span>
+        </div>
+        <div class="mt-1 text-[11px] text-slate-400">起始: 10 級 (目標 &lt; 8)</div>
+      </div>
+
+      <!-- Phase 1 Goal Card -->
+      <div class="glass-card p-4 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+          <span>階段一目標 (78kg)</span>
+          <i class="fa-solid fa-bullseye text-emerald-400"></i>
+        </div>
+        <div class="mt-1">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-300 font-medium">進度</span>
+            <span id="goalProgressPct" class="text-emerald-400 font-bold">0%</span>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700/50">
+            <div id="goalProgressBar" class="bg-gradient-to-r from-teal-500 to-emerald-400 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
           </div>
         </div>
-        <div class="kpi-subtext" id="goalRemainingText">尚餘 -- kg 即可達標</div>
+        <div id="goalRemainingText" class="text-[11px] text-slate-400 mt-1">尚餘 -- kg 即可達標</div>
       </div>
+
     </div>
 
-    <!-- AI Diagnostic / Insight Banner -->
-    <div id="aiAnalysisContainer" class="card ai-banner">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-weight: 700; font-size: 0.85rem; color: var(--accent-green); display: flex; align-items: center; gap: 6px;">
-          <i class="fa-solid fa-robot"></i> 🤖 AI 體態顧問最新診斷解析
-        </div>
-        <div id="aiAnalysisDate" style="font-size: 0.7rem; color: var(--text-muted); background-color: #0f172a; padding: 2px 8px; border-radius: 4px;">
-          讀取中...
-        </div>
-      </div>
-      <div id="aiAnalysisContent" style="margin-top: 8px; font-size: 0.8rem; color: #e2e8f0; line-height: 1.6;">
-        載入最新 AI 解析摘要中...
-      </div>
-    </div>
-
-    <!-- Dimension Controls Bar (Daily vs Weekly Tab) -->
-    <div class="card control-bar">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
-          <i class="fa-solid fa-filter" style="color: var(--accent-green); margin-right: 4px;"></i>數據檢視維度：
-        </span>
-        <div class="tab-group">
-          <button id="btnTabDaily" onclick="switchTab('daily')" class="tab-btn active">
-            📈 每日精準數據
+    <!-- Toggle Controls Bar (Daily vs Weekly Average Tab) -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 glass-card p-3">
+      <div class="flex items-center space-x-2 w-full sm:w-auto">
+        <span class="text-xs text-slate-400 font-medium px-2"><i class="fa-solid fa-filter text-emerald-400 mr-1"></i>數據檢視維度：</span>
+        <div class="inline-flex p-1 bg-slate-800/80 rounded-xl border border-slate-700/60 w-full sm:w-auto">
+          <button id="btnTabDaily" onclick="switchTab('daily')" class="btn-tab active flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-chart-line"></i> 📈 每日精準數據
           </button>
-          <button id="btnTabWeekly" onclick="switchTab('weekly')" class="tab-btn">
-            📊 週平均趨勢
+          <button id="btnTabWeekly" onclick="switchTab('weekly')" class="btn-tab flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-chart-column"></i> 📊 週平均趨勢
           </button>
         </div>
       </div>
 
-      <div class="legend-box">
-        <div><span style="display:inline-block; width:10px; height:2px; background-color:var(--accent-blue); margin-right:4px;"></span>體重 (左 Y 軸 Line)</div>
-        <div><span style="display:inline-block; width:8px; height:8px; background-color:rgba(16,185,129,0.5); border:1px solid var(--accent-green); margin-right:4px;"></span>骨骼肌量 (右 Y 軸 Bar)</div>
-        <div><span style="display:inline-block; width:8px; height:8px; background-color:var(--accent-yellow); border-radius:50%; margin-right:4px;"></span>體脂肪量</div>
-        <div><span style="display:inline-block; width:8px; height:8px; background-color:var(--accent-purple); border-radius:50%; margin-right:4px;"></span>體脂率 %</div>
+      <!-- Legend Indicator -->
+      <div class="flex items-center gap-4 text-xs text-slate-400 px-2">
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-0.5 bg-sky-400 rounded-full"></span> 體重 (左 Y 軸 Line)
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-3 bg-emerald-500/40 border border-emerald-400/60 rounded-sm"></span> 骨骼肌量 (右 Y 軸 Bar)
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 bg-amber-400 rounded-full"></span> 體脂肪量
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 bg-teal-300 rounded-full"></span> 體脂率 %
+        </div>
       </div>
     </div>
 
     <!-- Charts Section Grid -->
-    <div class="charts-grid">
-      <!-- Chart 1: Weight & Muscle -->
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="section-title" style="margin-bottom:0;">
-            <i class="fa-solid fa-chart-line" style="color: var(--accent-blue);"></i>
-            <span id="chart1Title">體重與骨骼肌量趨勢</span>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Chart 1: Weight & Muscle Mixed Chart -->
+      <div class="glass-card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-scale-balanced text-sky-400"></i>
+              <span id="chart1Title">體重與骨骼肌量趨勢（混合副座標軸）</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">骨骼肌為 Bar (右 Y 軸)，體重為 Line (左 Y 軸)，劑量變更自動繪製虛線分界</p>
           </div>
-          <span id="chart1Badge" style="font-size:0.68rem; color:var(--text-muted); background:#0f172a; padding:2px 8px; border-radius:4px;">每日</span>
+          <span id="chart1Badge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">每日</span>
         </div>
-        <div class="chart-container">
+        <div class="relative w-full h-[320px]">
           <canvas id="chartWeightMuscle"></canvas>
         </div>
       </div>
 
-      <!-- Chart 2: Fat & PBF -->
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="section-title" style="margin-bottom:0;">
-            <i class="fa-solid fa-fire" style="color: var(--accent-purple);"></i>
-            <span id="chart2Title">體脂肪量與體脂率變化</span>
+      <!-- Chart 2: Fat Mass & Body Fat % Dual Y-Axis Chart -->
+      <div class="glass-card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-amber-400"></i>
+              <span id="chart2Title">體脂肪量與體脂率變化</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">主 Y 軸：體脂肪量 (kg) ｜ 副 Y 軸：體脂率 (%)</p>
           </div>
-          <span id="chart2Badge" style="font-size:0.68rem; color:var(--text-muted); background:#0f172a; padding:2px 8px; border-radius:4px;">每日</span>
+          <span id="chart2Badge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">每日</span>
         </div>
-        <div class="chart-container">
+        <div class="relative w-full h-[320px]">
           <canvas id="chartFatPBF"></canvas>
         </div>
       </div>
+
     </div>
 
-    <!-- Blood Test Section (Matching Image 2) -->
-    <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <div class="section-title" style="margin-bottom: 0; color: #f43f5e;">
-          <i class="fa-solid fa-droplet"></i> 🩸 血液檢驗動態追蹤 (最新報告 : 2026/07/14)
-        </div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); background-color: #0f172a; padding: 2px 8px; border-radius: 4px;">
-          追蹤頻率：每 3 個月
-        </div>
+    <!-- Historical Data Table Section -->
+    <div class="glass-card p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-table-list text-emerald-400"></i>
+          詳細體態追蹤歷史明細記錄 (自 Google Sheets 即時同步)
+        </h3>
+        <span id="rowCountTag" class="text-xs text-slate-400">共 0 筆紀錄</span>
       </div>
-
-      <div class="blood-grid">
-        <!-- Card 1: Glucose & Metabolism -->
-        <div class="blood-subcard">
-          <div class="blood-subcard-title">
-            <i class="fa-solid fa-bullseye" style="color: #f43f5e;"></i> 血糖與代謝區
-          </div>
-          <div class="blood-item">
-            <div class="blood-item-row">
-              <span class="blood-label">糖化血色素 (HbA1c)</span>
-              <span class="blood-val" style="color: var(--accent-yellow);">6.1 %</span>
-            </div>
-            <div class="blood-target">目標 : &lt; 5.7 % (脫離前期)</div>
-          </div>
-          <div class="blood-item" style="margin-top: 10px;">
-            <div class="blood-item-row">
-              <span class="blood-label">空腹血糖 (Glucose)</span>
-              <span class="blood-val" style="color: var(--accent-yellow);">105 mg/dl</span>
-            </div>
-            <div class="blood-target">目標 : &lt; 100 mg/dl</div>
-          </div>
-        </div>
-
-        <!-- Card 2: Blood Lipids -->
-        <div class="blood-subcard">
-          <div class="blood-subcard-title">
-            <i class="fa-solid fa-heart-pulse" style="color: #f43f5e;"></i> 血脂與心血管區
-          </div>
-          <div class="blood-item">
-            <div class="blood-item-row">
-              <span class="blood-label">壞膽固醇 (LDL-C)</span>
-              <span class="blood-val" style="color: var(--accent-purple);">146 mg/dl</span>
-            </div>
-            <div class="blood-target">目標 : &lt; 130 mg/dl</div>
-          </div>
-          <div class="blood-item" style="margin-top: 10px;">
-            <div class="blood-item-row">
-              <span class="blood-label">三酸甘油酯 (TG)</span>
-              <span class="blood-val" style="color: var(--accent-green);">89 mg/dl 🌟</span>
-            </div>
-            <div class="blood-target">維持 : &lt; 100 mg/dl</div>
-          </div>
-        </div>
-
-        <!-- Card 3: Liver & Kidney -->
-        <div class="blood-subcard">
-          <div class="blood-subcard-title">
-            <i class="fa-solid fa-sun" style="color: var(--accent-green);"></i> 肝腎功能區
-          </div>
-          <div class="blood-item">
-            <div class="blood-item-row">
-              <span class="blood-label">腎功能 (eGFR)</span>
-              <span class="blood-val" style="color: var(--accent-green);">111.48 🌟</span>
-            </div>
-            <div class="blood-target">參考值 : ≥ 90</div>
-          </div>
-          <div class="blood-item" style="margin-top: 10px;">
-            <div class="blood-item-row">
-              <span class="blood-label">肝功能 (ALT/sGPT)</span>
-              <span class="blood-val" style="color: var(--accent-green);">39 U/L 🌟</span>
-            </div>
-            <div class="blood-target">參考值 : &lt; 40~50</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Detailed InBody Table Card -->
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <div class="section-title" style="margin-bottom:0; color:var(--accent-green);">
-          <i class="fa-solid fa-table-list"></i> 詳細體態追蹤歷史明細記錄 (自 Google Sheets 即時同步)
-        </div>
-        <span id="rowCountTag" style="font-size:0.7rem; color:var(--text-muted);">共 0 筆紀錄</span>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-800/80 text-slate-400 uppercase text-[11px] border-b border-slate-700">
             <tr>
-              <th>日期 (Date)</th>
-              <th>體重 (kg)</th>
-              <th>骨骼肌 (kg)</th>
-              <th>體脂肪 (kg)</th>
-              <th>體脂率 (%)</th>
-              <th>BMI</th>
-              <th>內臟脂肪</th>
-              <th>劑量 (mg)</th>
-              <th>AI 診斷解析摘要 (ai_analysis)</th>
+              <th class="py-3 px-3">日期 (Date)</th>
+              <th class="py-3 px-3">體重 (kg)</th>
+              <th class="py-3 px-3">骨骼肌 (kg)</th>
+              <th class="py-3 px-3">體脂肪 (kg)</th>
+              <th class="py-3 px-3">體脂率 (%)</th>
+              <th class="py-3 px-3">BMI</th>
+              <th class="py-3 px-3">內臟脂肪</th>
+              <th class="py-3 px-3">劑量 (mg)</th>
+              <th class="py-3 px-3">AI 診斷解析摘要 (ai_analysis)</th>
             </tr>
           </thead>
-          <tbody id="dataTableBody">
+          <tbody id="dataTableBody" class="divide-y divide-slate-800/60">
             <tr>
-              <td colspan="9" style="text-align:center; padding:20px; color:var(--text-sub);">資料載入中...</td>
+              <td colspan="9" class="py-6 text-center text-slate-500">資料讀取中...</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-  </div>
+  </main>
 
-  <!-- Config Modal -->
-  <div id="configModal" class="modal-overlay hidden">
-    <div class="card modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:10px; margin-bottom:12px;">
-        <div class="section-title" style="margin-bottom:0;">
-          <i class="fa-solid fa-sliders" style="color:var(--accent-green);"></i> Dashboard Google Sheets 連線設定
-        </div>
-        <button onclick="toggleConfigModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1rem;"><i class="fa-solid fa-xmark"></i></button>
+  <!-- Configuration Modal -->
+  <div id="configModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-lg p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-emerald-400"></i>
+          Dashboard Google Sheets 連線設定
+        </h3>
+        <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:12px; font-size:0.75rem;">
+      <div class="space-y-3 text-xs">
         <div>
-          <label style="display:block; margin-bottom:4px; color:var(--text-muted);">InBody 體態數據 CSV/GViz 網址:</label>
-          <input type="text" id="csvUrlInput" value="https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/gviz/tq?tqx=out:csv&gid=2019214985">
+          <label class="block font-medium text-slate-300 mb-1">Google Sheets CSV Export URL (InBody Sheet):</label>
+          <input type="text" id="csvUrlInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono text-[11px]" value="https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/export?format=csv">
+          <p class="text-[11px] text-slate-400 mt-1">預設已綁定您的「InBody 體態數據記錄 V3」試算表 CSV 匯出網址。</p>
         </div>
 
-        <div>
-          <label style="display:block; margin-bottom:4px; color:var(--text-muted);">Blood Test 血液檢驗 CSV/GViz 網址:</label>
-          <input type="text" id="bloodCsvUrlInput" value="https://docs.google.com/spreadsheets/d/1SgiX4vWzb4r62eqQDkse8oQeHvFthViSC_tMREgnDUY/gviz/tq?tqx=out:csv">
+        <div class="p-3 bg-slate-900/60 rounded-lg border border-slate-800">
+          <div class="font-semibold text-slate-300 mb-1">欄位順序規範：</div>
+          <p class="text-slate-400 text-[11px] leading-relaxed">
+            A: Date ｜ B: Weight ｜ C: Skeletal_Muscle ｜ D: Fat_Mass ｜ E: PBF ｜ F: BMI ｜ G: Visceral_Fat ｜ H: WHR ｜ I: BMR ｜ J: dose ｜ K: ai_analysis
+          </p>
         </div>
       </div>
 
-      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px; border-top:1px solid var(--card-border); padding-top:10px;">
-        <button onclick="resetConfig()" class="btn">重置網址</button>
-        <button onclick="saveConfig()" class="btn" style="background-color:var(--accent-green); color:#ffffff;">儲存並重新載入</button>
+      <div class="flex justify-end space-x-2 pt-2 border-t border-slate-700">
+        <button onclick="saveConfig()" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-xs font-semibold transition">
+          儲存並重新載入
+        </button>
       </div>
     </div>
   </div>
 
+  <!-- JavaScript Application Logic -->
   <script>
-    const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/gviz/tq?tqx=out:csv&gid=2019214985";
-    const DEFAULT_BLOOD_CSV_URL = "https://docs.google.com/spreadsheets/d/1SgiX4vWzb4r62eqQDkse8oQeHvFthViSC_tMREgnDUY/gviz/tq?tqx=out:csv";
+    // Default Google Sheets CSV Export URL
+    const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/export?format=csv";
 
-    // Standard fallback sample data with correct column alignment matching raw Google Sheet
+    // Fallback Sample Data (Ensures smooth preview offline or if CORS blocked)
     const SAMPLE_RAW_DATA = [
-      ["Date", "Time", "Weight", "Skeletal_Muscle", "Fat_Mass", "PBF", "BMI", "Visceral_Fat", "WHR", "BMR", "dose", "Note", "ai_analysis"],
-      ["2026/07/20", "06:50", "84.7", "33.0", "26.6", "31.4", "29.5", "10", "0.92", "1720", "2.5", "", ""],
-      ["2026/07/27", "06:50", "84.3", "32.9", "25.9", "30.7", "29.3", "9", "0.87", "1710", "2.5", "", ""],
-      ["2026/07/29", "06:50", "82.8", "32.5", "25.5", "30.8", "28.8", "10", "0.88", "1700", "2.5", "", ""],
-      ["2026/07/30", "06:50", "82.4", "32.7", "24.9", "30.2", "28.7", "9", "0.88", "1695", "2.5", "", ""],
-      ["2026/08/03", "06:50", "82.6", "32.9", "24.7", "29.9", "28.8", "9", "0.88", "1700", "2.5", "", ""],
-      ["2026/08/05", "06:50", "82.1", "32.9", "24.5", "29.6", "28.6", "9", "0.88", "1690", "2.5", "", ""],
-      ["2026/08/06", "06:50", "81.6", "32.5", "24.5", "30.0", "28.4", "9", "0.88", "1685", "2.5", "", ""],
-      ["2026/08/10", "06:50", "81.5", "32.4", "24.4", "29.9", "28.4", "9", "0.88", "1682", "2.5", "", ""],
-      ["2026/08/13", "06:50", "81.2", "32.3", "24.2", "29.8", "28.3", "9", "0.88", "1680", "2.5", "", "🎯 減脂含金量高達 88.5%：純脂肪累積流失 2.4kg，肌肉完全零流失，準備升級 5.0mg！"]
+      ["Date", "Weight", "Skeletal_Muscle", "Fat_Mass", "PBF", "BMI", "Visceral_Fat", "WHR", "BMR", "dose", "ai_analysis"],
+      ["2026/07/20", "84.7", "33.0", "26.6", "31.4", "29.5", "10", "0.92", "1720", "2.5", "🎯 療程起始基準點：C字型體態，肌肉量及格但體脂率高達 31.4%，猛健樂 2.5mg 啟動。"],
+      ["2026/07/27", "84.3", "32.9", "25.9", "30.7", "29.3", "9", "0.87", "1710", "2.5", "🎯 首週表現極佳：減重 0.4kg，純脂肪流失 0.7kg，肌肉完好保護，內臟脂肪降至 9 級！"],
+      ["2026/07/29", "82.8", "32.5", "25.5", "30.8", "28.8", "10", "0.88", "1700", "2.5", "🎯 減脂節奏持續：累積減重 1.9kg，肌肉波動屬於水分離子調節，無須焦慮。"],
+      ["2026/07/30", "82.4", "32.7", "24.9", "30.2", "28.7", "9", "0.88", "1695", "2.5", "🎯 肌肉回升驗證：骨骼肌量回升 0.2kg，體脂率逼近 30% 大關！"],
+      ["2026/08/03", "82.6", "32.9", "24.7", "29.9", "28.8", "9", "0.88", "1700", "2.5", "🚀 體脂率突破 30%：歷史性進入 29.9%，減脂高效高含金量。"],
+      ["2026/08/05", "82.1", "32.9", "24.5", "29.6", "28.6", "9", "0.88", "1690", "2.5", "🎉 體脂率歷史新低 29.6%：肌肉穩如泰山(32.9kg)，純脂持續快速燃燒！"],
+      ["2026/08/06", "81.6", "32.5", "24.5", "30.0", "28.4", "9", "0.88", "1685", "2.5", "🎯 體重破 82kg 關卡：來到 81.6kg，猛健樂 2.5mg 適應極佳。"],
+      ["2026/08/10", "81.5", "32.4", "24.4", "29.9", "28.4", "9", "0.88", "1682", "2.5", "🎯 穩定鎖定 29.9% 體脂率，下週即將迎來 5.0mg 劑量升階。"],
+      ["2026/08/13", "81.2", "32.3", "24.2", "29.8", "28.3", "9", "0.88", "1680", "2.5", "🎯 減脂含金量高達 88.5%：純脂肪累積流失 2.4kg，肌肉完全零流失，準備升級 5.0mg！"]
     ];
 
     let globalDailyData = [];
     let globalWeeklyData = [];
-    let currentViewTab = 'daily';
+    let currentViewTab = 'daily'; // 'daily' or 'weekly'
 
     let chartInstanceWeightMuscle = null;
     let chartInstanceFatPBF = null;
 
+    // Dose change detection vertical lines plugin for Chart.js
+    const doseAnnotationPlugin = {
+      id: 'doseAnnotationPlugin',
+      afterDraw(chart) {
+        const doseChanges = chart.config.options.plugins.doseChanges || [];
+        if (!doseChanges || doseChanges.length === 0) return;
+
+        const ctx = chart.ctx;
+        const xAxis = chart.scales.x;
+        const yAxis = chart.scales.y;
+
+        doseChanges.forEach(change => {
+          const index = change.index;
+          if (index < 0 || index >= xAxis.ticks.length) return;
+
+          const x = xAxis.getPixelForTick(index);
+          const top = yAxis.top;
+          const bottom = yAxis.bottom;
+
+          ctx.save();
+          // Draw vertical dashed line
+          ctx.beginPath();
+          ctx.setLineDash([6, 4]);
+          ctx.strokeStyle = '#ec4899'; // Pink/Rose highlight for dose change
+          ctx.lineWidth = 2;
+          ctx.moveTo(x, top);
+          ctx.lineTo(x, bottom);
+          ctx.stroke();
+
+          // Draw label badge
+          ctx.fillStyle = '#ec4899';
+          ctx.font = 'bold 11px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(`💊 升階 ${change.newDose}mg`, x, top - 4);
+          ctx.restore();
+        });
+      }
+    };
+
+    Chart.register(doseAnnotationPlugin);
+
+    // Initialize application on load
+    window.onload = function() {
+      loadSavedConfig();
+      refreshData();
+    };
+
     function toggleConfigModal() {
       const modal = document.getElementById('configModal');
-      if (modal) modal.classList.toggle('hidden');
+      modal.classList.toggle('hidden');
     }
 
     function loadSavedConfig() {
-      let savedInBodyUrl = localStorage.getItem('inbody_csv_url');
-      if (!savedInBodyUrl || savedInBodyUrl.includes('/export?format=csv')) {
-        savedInBodyUrl = DEFAULT_CSV_URL;
-        localStorage.setItem('inbody_csv_url', DEFAULT_CSV_URL);
+      const savedUrl = localStorage.getItem('inbody_csv_url');
+      if (savedUrl) {
+        document.getElementById('csvUrlInput').value = savedUrl;
       }
-      const input = document.getElementById('csvUrlInput');
-      if (input) input.value = savedInBodyUrl;
-
-      let savedBloodUrl = localStorage.getItem('blood_csv_url');
-      if (!savedBloodUrl || savedBloodUrl.includes('/export?format=csv')) {
-        savedBloodUrl = DEFAULT_BLOOD_CSV_URL;
-        localStorage.setItem('blood_csv_url', DEFAULT_BLOOD_CSV_URL);
-      }
-      const bloodInput = document.getElementById('bloodCsvUrlInput');
-      if (bloodInput) bloodInput.value = savedBloodUrl;
-
-      const bloodLink = document.getElementById('bloodTestLink');
-      if (bloodLink) {
-        bloodLink.href = savedBloodUrl.replace('/gviz/tq?tqx=out:csv', '/edit');
-      }
-    }
-
-    function resetConfig() {
-      localStorage.setItem('inbody_csv_url', DEFAULT_CSV_URL);
-      localStorage.setItem('blood_csv_url', DEFAULT_BLOOD_CSV_URL);
-      loadSavedConfig();
-      refreshData();
-      toggleConfigModal();
     }
 
     function saveConfig() {
-      const input = document.getElementById('csvUrlInput');
-      if (input) {
-        const url = input.value.trim();
-        if (url) localStorage.setItem('inbody_csv_url', url);
+      const url = document.getElementById('csvUrlInput').value.trim();
+      if (url) {
+        localStorage.setItem('inbody_csv_url', url);
       }
-
-      const bloodInput = document.getElementById('bloodCsvUrlInput');
-      if (bloodInput) {
-        const bloodUrl = bloodInput.value.trim();
-        if (bloodUrl) localStorage.setItem('blood_csv_url', bloodUrl);
-      }
-
       toggleConfigModal();
       refreshData();
     }
 
-    window.addEventListener('DOMContentLoaded', function() {
-      loadSavedConfig();
-      refreshData();
-    });
-
     async function refreshData() {
       const refreshIcon = document.getElementById('refreshIcon');
-      if (refreshIcon) refreshIcon.classList.add('fa-spin');
+      refreshIcon.classList.add('fa-spin');
 
-      let csvUrl = localStorage.getItem('inbody_csv_url') || DEFAULT_CSV_URL;
+      const csvUrl = localStorage.getItem('inbody_csv_url') || DEFAULT_CSV_URL;
 
       try {
         const response = await fetch(csvUrl, { cache: 'no-cache' });
-        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
-
+        if (!response.ok) throw new Error('Fetch failed');
         const csvText = await response.text();
-
-        if (csvText.trim().toLowerCase().startsWith('<!doctype') || csvText.trim().toLowerCase().startsWith('<html')) {
-          throw new Error('Returned HTML login page instead of CSV');
-        }
-
         const parsedRows = parseCSV(csvText);
-        const validCount = processDataRows(parsedRows);
 
-        if (validCount > 0) {
+        if (parsedRows.length > 1) {
+          processDataRows(parsedRows);
           updateSyncBadge(true, "Google Sheets 已連線");
         } else {
-          throw new Error("No valid rows found");
+          throw new Error('Empty CSV');
         }
       } catch (err) {
-        console.warn("Fetch failed, activating backup sample data:", err);
+        console.warn("Using sample fallback data due to fetch error/CORS:", err);
         processDataRows(SAMPLE_RAW_DATA);
         updateSyncBadge(false, "示範離線數據");
       } finally {
-        if (refreshIcon) {
-          setTimeout(() => refreshIcon.classList.remove('fa-spin'), 500);
-        }
+        setTimeout(() => {
+          refreshIcon.classList.remove('fa-spin');
+        }, 500);
       }
     }
 
     function updateSyncBadge(isLive, text) {
       const badge = document.getElementById('syncBadge');
-      if (!badge) return;
       if (isLive) {
-        badge.className = "badge-sync badge-live";
-        badge.innerHTML = `<span class="dot dot-green"></span> ${text}`;
+        badge.className = "text-xs font-normal px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-1.5";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${text}`;
       } else {
-        badge.className = "badge-sync badge-offline";
-        badge.innerHTML = `<span class="dot dot-yellow"></span> ${text}`;
+        badge.className = "text-xs font-normal px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 inline-flex items-center gap-1.5";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> ${text}`;
       }
     }
 
+    // Simple CSV parser supporting quotes & linebreaks
     function parseCSV(text) {
-      const lines = text.split(/\r\n|\n/);
+      const lines = text.split(/
+|
+/);
       const result = [];
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
@@ -874,109 +487,55 @@
       return result;
     }
 
-    // Helper: Dynamic Column Finder by Keyword Matching
-    function findColIndex(headers, keywords) {
-      if (!headers || headers.length === 0) return -1;
-      for (const kw of keywords) {
-        for (let i = 0; i < headers.length; i++) {
-          const h = (headers[i] || '').toString().toLowerCase().trim().replace(/"/g, '');
-          if (h.includes(kw.toLowerCase())) {
-            return i;
-          }
-        }
-      }
-      return -1;
-    }
-
-    // Clean numeric value extractor
-    function parseNum(val) {
-      if (val === undefined || val === null) return 0;
-      const str = val.toString().replace(/"/g, '').trim();
-      const match = str.match(/[-+]?\d*\.?\d+/);
-      return match ? parseFloat(match[0]) : 0;
-    }
-
     function processDataRows(rows) {
-      if (!rows || rows.length === 0) return 0;
-
-      let headers = rows[0];
-      let dataRows = rows.slice(1);
-
-      // 1. Dynamic Column Index Detection from Header Row
-      let colDate = findColIndex(headers, ['date', '日期']);
-      let colWeight = findColIndex(headers, ['weight', '體重']);
-      let colMuscle = findColIndex(headers, ['skeletal', 'muscle', '骨骼肌']);
-      let colFatMass = findColIndex(headers, ['fat_mass', '體脂肪量', '體脂量']);
-      let colPBF = findColIndex(headers, ['pbf', '體脂率']);
-      let colBMI = findColIndex(headers, ['bmi']);
-      let colVisceral = findColIndex(headers, ['visceral', '內臟脂肪']);
-      let colWHR = findColIndex(headers, ['whr', '腰臀']);
-      let colBMR = findColIndex(headers, ['bmr', '基礎代謝', '基代']);
-      let colDose = findColIndex(headers, ['dose', '劑量']);
-      let colAI = findColIndex(headers, ['ai_analysis', 'ai', '診斷', '解析']);
-
-      // 2. Intelligent Fallbacks if headers weren't found
-      if (colDate === -1) colDate = 0;
-      if (colWeight === -1) {
-        // If col 1 looks like Weight (>40), use 1; else if col 2 looks like Weight, use 2
-        colWeight = 2; 
-      }
-      if (colMuscle === -1) colMuscle = colWeight + 1;
-      if (colFatMass === -1) colFatMass = colWeight + 2;
-      if (colPBF === -1) colPBF = colWeight + 3;
-      if (colBMI === -1) colBMI = colWeight + 4;
-      if (colVisceral === -1) colVisceral = colWeight + 5;
-      if (colWHR === -1) colWHR = colWeight + 6;
-      if (colBMR === -1) colBMR = colWeight + 7;
-      if (colDose === -1) colDose = colWeight + 8;
-      if (colAI === -1) {
-        // AI is usually the last column or index 12
-        colAI = headers.length > 12 ? 12 : headers.length - 1;
+      // Ignore header row if present
+      let dataRows = rows;
+      if (rows[0][0].toLowerCase().includes("date")) {
+        dataRows = rows.slice(1);
       }
 
       globalDailyData = [];
       let lastDose = "2.5";
 
       dataRows.forEach(row => {
-        if (!row || !row[colDate] || row[colDate].trim() === "" || row[colDate].startsWith("<")) return;
+        if (!row[0] || row[0].trim() === "") return;
 
-        const dateStr = (row[colDate] || '').toString().trim().replace(/"/g, '');
-        if (!/\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/.test(dateStr)) return;
+        const date = row[0].trim();
+        const weight = parseFloat(row[1]) || 0;
+        const muscle = parseFloat(row[2]) || 0;
+        const fatMass = parseFloat(row[3]) || 0;
+        const pbf = parseFloat(row[4]) || 0;
+        const bmi = parseFloat(row[5]) || 0;
+        const visceral = parseInt(row[6]) || 0;
+        const whr = parseFloat(row[7]) || 0;
+        const bmr = parseInt(row[8]) || 0;
 
-        const weight = parseNum(row[colWeight]);
-        const muscle = parseNum(row[colMuscle]);
-        const fatMass = parseNum(row[colFatMass]);
-        const pbf = parseNum(row[colPBF]);
-        const bmi = parseNum(row[colBMI]);
-        const visceral = Math.round(parseNum(row[colVisceral]));
-        const whr = parseNum(row[colWHR]);
-        const bmr = Math.round(parseNum(row[colBMR]));
-
-        let rawDose = row[colDose] ? row[colDose].toString().trim().replace(/"/g, '') : '';
-        let dose = rawDose ? rawDose : lastDose;
+        // Forward fill dose if empty
+        let dose = row[9] ? row[9].trim() : lastDose;
         if (!dose) dose = lastDose;
         lastDose = dose;
 
-        const aiAnalysis = row[colAI] ? row[colAI].toString().trim().replace(/"/g, '') : "";
+        const aiAnalysis = row[10] ? row[10].trim() : "";
 
         globalDailyData.push({
-          date: dateStr, weight, muscle, fatMass, pbf, bmi, visceral, whr, bmr, dose, aiAnalysis
+          date, weight, muscle, fatMass, pbf, bmi, visceral, whr, bmr, dose, aiAnalysis
         });
       });
 
-      if (globalDailyData.length === 0) return 0;
-
+      // Sort daily data chronologically
       globalDailyData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Calculate Weekly Average Data
       globalWeeklyData = calculateWeeklyAverages(globalDailyData);
 
+      // Render UI Components
       renderHeaderAndAIInsight();
       renderKPICards();
       renderDataTable();
       renderCharts();
-
-      return globalDailyData.length;
     }
 
+    // Calculate Weekly Averages based on ISO weeks or 7-day groups
     function calculateWeeklyAverages(dailyData) {
       const groups = {};
 
@@ -984,9 +543,10 @@
         const d = new Date(item.date);
         if (isNaN(d)) return;
 
+        // Get Monday of the week
         const day = d.getDay();
         const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-        const monday = new Date(d.getFullYear(), d.getMonth(), diff);
+        const monday = new Date(d.setDate(diff));
         const weekKey = `第 ${getWeekNumber(monday)} 週 (${monday.getMonth()+1}/${monday.getDate()})`;
 
         if (!groups[weekKey]) {
@@ -1011,7 +571,7 @@
         const avgMuscle = average(g.muscles);
         const avgFat = average(g.fats);
         const avgPBF = average(g.pbfs);
-        const dose = g.doses[g.doses.length - 1];
+        const dose = g.doses[g.doses.length - 1]; // Latest dose of the week
         const aiAnalysis = g.aiAnalyses.length > 0 ? g.aiAnalyses[g.aiAnalyses.length - 1] : "";
 
         weeklyAverages.push({
@@ -1034,7 +594,7 @@
     }
 
     function getWeekNumber(d) {
-      const startDate = new Date(2026, 6, 20);
+      const startDate = new Date(2026, 6, 20); // Baseline start 2026/07/20
       const diffTime = Math.abs(d - startDate);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       return Math.floor(diffDays / 7) + 1;
@@ -1042,20 +602,16 @@
 
     function renderHeaderAndAIInsight() {
       if (globalDailyData.length === 0) return;
-
       const latest = globalDailyData[globalDailyData.length - 1];
 
-      const doseElem = document.getElementById('doseSubtitle');
-      if (doseElem) doseElem.innerText = `${latest.dose} mg`;
+      // Update Dose Badge
+      document.getElementById('currentDoseBadge').innerText = `${latest.dose} mg`;
 
-      const lastUpdateElem = document.getElementById('lastUpdatedBadge');
-      if (lastUpdateElem) {
-        lastUpdateElem.innerText = `最後更新 : ${latest.date}`;
-      }
-
+      // Update AI Insight Container
       const aiContainer = document.getElementById('aiAnalysisContent');
       const aiDateBadge = document.getElementById('aiAnalysisDate');
 
+      // Find latest entry with non-empty AI Analysis
       let latestAIEntry = null;
       for (let i = globalDailyData.length - 1; i >= 0; i--) {
         if (globalDailyData[i].aiAnalysis && globalDailyData[i].aiAnalysis.trim() !== "") {
@@ -1064,12 +620,12 @@
         }
       }
 
-      if (latestAIEntry && aiContainer && aiDateBadge) {
+      if (latestAIEntry) {
         aiDateBadge.innerText = `最新診斷日期：${latestAIEntry.date}｜劑量：${latestAIEntry.dose} mg`;
         aiContainer.innerHTML = latestAIEntry.aiAnalysis;
-      } else if (aiContainer && aiDateBadge) {
-        aiDateBadge.innerText = `無最新診斷`;
-        aiContainer.innerText = `尚無最新 AI 解析診斷。`;
+      } else {
+        aiDateBadge.innerText = `基準日期：${latest.date}`;
+        aiContainer.innerHTML = "🎯 猛健樂療程穩定推進中。蛋白質每日保持 120g 以上，骨骼肌量保護完美，純脂肪高效持續燃燒！";
       }
     }
 
@@ -1079,22 +635,36 @@
       const baseline = globalDailyData[0];
       const latest = globalDailyData[globalDailyData.length - 1];
 
-      document.getElementById('kpiWeight').innerHTML = `${latest.weight}<span class="kpi-unit">kg</span>`;
+      // Weight
+      document.getElementById('kpiWeight').innerHTML = `${latest.weight} <span class="text-xs font-normal text-slate-400">kg</span>`;
       const weightDiff = (latest.weight - baseline.weight).toFixed(1);
       document.getElementById('kpiWeightDiff').innerText = `${weightDiff <= 0 ? '📉' : '📈'} ${weightDiff} kg`;
-      document.getElementById('kpiWeightSub').innerText = `累計 ${weightDiff} kg (基準日 ${baseline.weight}kg)`;
+      document.getElementById('kpiWeightDiff').className = weightDiff <= 0 ? "text-xs font-medium text-emerald-400" : "text-xs font-medium text-rose-400";
 
-      document.getElementById('kpiMuscle').innerHTML = `${latest.muscle}<span class="kpi-unit">kg</span>`;
+      // Muscle
+      document.getElementById('kpiMuscle').innerHTML = `${latest.muscle} <span class="text-xs font-normal text-slate-400">kg</span>`;
       const muscleDiff = (latest.muscle - baseline.muscle).toFixed(1);
       document.getElementById('kpiMuscleDiff').innerText = `${muscleDiff >= 0 ? '📈' : '➖'} ${muscleDiff > 0 ? '+' : ''}${muscleDiff} kg`;
+      document.getElementById('kpiMuscleDiff').className = muscleDiff >= -0.3 ? "text-xs font-medium text-emerald-400" : "text-xs font-medium text-amber-400";
 
-      document.getElementById('kpiPBF').innerHTML = `${latest.pbf}<span class="kpi-unit">%</span>`;
+      // Fat Mass
+      document.getElementById('kpiFatMass').innerHTML = `${latest.fatMass} <span class="text-xs font-normal text-slate-400">kg</span>`;
+      const fatDiff = (latest.fatMass - baseline.fatMass).toFixed(1);
+      document.getElementById('kpiFatMassDiff').innerText = `${fatDiff <= 0 ? '📉' : '📈'} ${fatDiff} kg`;
+
+      // Body Fat %
+      document.getElementById('kpiPBF').innerHTML = `${latest.pbf} <span class="text-xs font-normal text-slate-400">%</span>`;
       const pbfDiff = (latest.pbf - baseline.pbf).toFixed(1);
       document.getElementById('kpiPBFDiff').innerText = `${pbfDiff <= 0 ? '📉' : '📈'} ${pbfDiff}%`;
-      document.getElementById('kpiFatSub').innerText = `純脂 ${latest.fatMass} kg (累計 -${(baseline.fatMass - latest.fatMass).toFixed(1)}kg)`;
 
+      // Visceral Fat
+      document.getElementById('kpiVisceral').innerHTML = `${latest.visceral} <span class="text-xs font-normal text-slate-400">級</span>`;
+      const viscDiff = latest.visceral - baseline.visceral;
+      document.getElementById('kpiVisceralDiff').innerText = `${viscDiff <= 0 ? '📉' : '📈'} ${viscDiff}`;
+
+      // Phase 1 Goal Progress (78.0 kg goal, baseline 84.7 kg)
       const targetWeight = 78.0;
-      const totalToLose = baseline.weight - targetWeight;
+      const totalToLose = baseline.weight - targetWeight; // 6.7 kg
       const currentLost = baseline.weight - latest.weight;
       let progressPct = Math.min(100, Math.max(0, (currentLost / totalToLose) * 100)).toFixed(1);
 
@@ -1107,22 +677,21 @@
 
     function renderDataTable() {
       const tbody = document.getElementById('dataTableBody');
-      if (!tbody) return;
       document.getElementById('rowCountTag').innerText = `共 ${globalDailyData.length} 筆紀錄`;
 
       let html = '';
       [...globalDailyData].reverse().forEach(item => {
         html += `
-          <tr>
-            <td style="font-weight:600; color:#ffffff;">${item.date}</td>
-            <td style="font-weight:700; color:var(--accent-blue);">${item.weight} kg</td>
-            <td style="font-weight:600; color:var(--accent-green);">${item.muscle} kg</td>
-            <td style="font-weight:600; color:var(--accent-yellow);">${item.fatMass} kg</td>
-            <td style="font-weight:600; color:var(--accent-purple);">${item.pbf}%</td>
-            <td style="color:var(--text-muted);">${item.bmi}</td>
-            <td style="color:var(--text-muted);">${item.visceral} 級</td>
-            <td><span style="background-color:rgba(192,132,252,0.15); color:var(--accent-purple); padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.68rem;">${item.dose} mg</span></td>
-            <td style="color:var(--text-muted); max-width:250px; overflow:hidden; text-overflow:ellipsis;">${item.aiAnalysis || '-'}</td>
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="py-2.5 px-3 font-medium text-white">${item.date}</td>
+            <td class="py-2.5 px-3 font-bold text-sky-400">${item.weight} kg</td>
+            <td class="py-2.5 px-3 font-semibold text-emerald-400">${item.muscle} kg</td>
+            <td class="py-2.5 px-3 font-semibold text-amber-400">${item.fatMass} kg</td>
+            <td class="py-2.5 px-3 font-semibold text-teal-300">${item.pbf}%</td>
+            <td class="py-2.5 px-3 text-slate-400">${item.bmi}</td>
+            <td class="py-2.5 px-3 text-slate-400">${item.visceral} 級</td>
+            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">${item.dose} mg</span></td>
+            <td class="py-2.5 px-3 text-slate-300 max-w-xs truncate">${item.aiAnalysis || '-'}</td>
           </tr>
         `;
       });
@@ -1132,21 +701,19 @@
 
     function switchTab(tab) {
       currentViewTab = tab;
-      document.getElementById('btnTabDaily').className = tab === 'daily' ? "tab-btn active" : "tab-btn";
-      document.getElementById('btnTabWeekly').className = tab === 'weekly' ? "tab-btn active" : "tab-btn";
+      document.getElementById('btnTabDaily').className = tab === 'daily' ? "btn-tab active flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5" : "btn-tab flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5";
+      document.getElementById('btnTabWeekly').className = tab === 'weekly' ? "btn-tab active flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5" : "btn-tab flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5";
 
-      document.getElementById('chart1Badge').innerText = tab === 'daily' ? "每日" : "週平均";
-      document.getElementById('chart2Badge').innerText = tab === 'daily' ? "每日" : "週平均";
+      document.getElementById('chart1Badge').innerText = tab === 'daily' ? "每日精準" : "週平均趨勢";
+      document.getElementById('chart2Badge').innerText = tab === 'daily' ? "每日精準" : "週平均趨勢";
 
-      document.getElementById('chart1Title').innerText = tab === 'daily' ? "體重與骨骼肌量趨勢" : "體重與骨骼肌量趨勢 (週平均)";
-      document.getElementById('chart2Title').innerText = tab === 'daily' ? "體脂肪量與體脂率變化" : "體脂肪量與體脂率變化 (週平均)";
+      document.getElementById('chart1Title').innerText = tab === 'daily' ? "體重與骨骼肌量趨勢（每日混合圖）" : "體重與骨骼肌量趨勢（週平均平滑圖）";
+      document.getElementById('chart2Title').innerText = tab === 'daily' ? "體脂肪量與體脂率變化（每日數據）" : "體脂肪量與體脂率變化（週平均趨勢）";
 
       renderCharts();
     }
 
     function renderCharts() {
-      if (typeof Chart === 'undefined') return;
-
       const activeData = currentViewTab === 'daily' ? globalDailyData : globalWeeklyData;
       if (activeData.length === 0) return;
 
@@ -1156,141 +723,154 @@
       const fats = activeData.map(d => d.fatMass);
       const pbfs = activeData.map(d => d.pbf);
 
-      // Chart 1
-      const chartEl1 = document.getElementById('chartWeightMuscle');
-      if (chartEl1) {
-        const ctx1 = chartEl1.getContext('2d');
-        if (chartInstanceWeightMuscle) chartInstanceWeightMuscle.destroy();
-
-        chartInstanceWeightMuscle = new Chart(ctx1, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                type: 'line',
-                label: '體重 Weight (kg)',
-                data: weights,
-                borderColor: '#38bdf8',
-                backgroundColor: '#38bdf8',
-                borderWidth: 2.5,
-                pointRadius: 4,
-                tension: 0.2,
-                yAxisID: 'yWeight'
-              },
-              {
-                type: 'bar',
-                label: '骨骼肌量 Muscle (kg)',
-                data: muscles,
-                backgroundColor: 'rgba(16, 185, 129, 0.45)',
-                borderColor: '#10b981',
-                borderWidth: 1.5,
-                borderRadius: 4,
-                barPercentage: 0.5,
-                yAxisID: 'yMuscle'
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: { legend: { display: false } },
-            scales: {
-              x: {
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#94a3b8', font: { size: 10 } }
-              },
-              yWeight: {
-                type: 'linear',
-                position: 'left',
-                title: { display: true, text: '體重 (kg)', color: '#38bdf8', font: { size: 10, weight: 'bold' } },
-                min: Math.floor(Math.min(...weights) - 2),
-                max: Math.ceil(Math.max(...weights) + 2),
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#38bdf8' }
-              },
-              yMuscle: {
-                type: 'linear',
-                position: 'right',
-                title: { display: true, text: '骨骼肌 (kg)', color: '#10b981', font: { size: 10, weight: 'bold' } },
-                min: Math.floor(Math.min(...muscles) - 3),
-                max: Math.ceil(Math.max(...muscles) + 3),
-                grid: { drawOnChartArea: false },
-                ticks: { color: '#10b981' }
-              }
-            }
-          }
-        });
+      // Detect dose change indices
+      const doseChanges = [];
+      for (let i = 1; i < activeData.length; i++) {
+        if (activeData[i].dose !== activeData[i - 1].dose) {
+          doseChanges.push({
+            index: i,
+            oldDose: activeData[i - 1].dose,
+            newDose: activeData[i].dose
+          });
+        }
       }
 
-      // Chart 2
-      const chartEl2 = document.getElementById('chartFatPBF');
-      if (chartEl2) {
-        const ctx2 = chartEl2.getContext('2d');
-        if (chartInstanceFatPBF) chartInstanceFatPBF.destroy();
+      // --- Chart 1: Weight (Line) & Muscle (Bar) Dual Y-Axis ---
+      const ctx1 = document.getElementById('chartWeightMuscle').getContext('2d');
+      if (chartInstanceWeightMuscle) chartInstanceWeightMuscle.destroy();
 
-        chartInstanceFatPBF = new Chart(ctx2, {
-          type: 'line',
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: '體脂肪量 Fat Mass (kg)',
-                data: fats,
-                borderColor: '#f59e0b',
-                backgroundColor: 'rgba(245, 158, 11, 0.15)',
-                borderWidth: 2.5,
-                fill: true,
-                pointRadius: 4,
-                tension: 0.2,
-                yAxisID: 'yFat'
-              },
-              {
-                label: '體脂率 PBF (%)',
-                data: pbfs,
-                borderColor: '#c084fc',
-                backgroundColor: '#c084fc',
-                borderWidth: 2,
-                borderDash: [4, 4],
-                pointRadius: 4,
-                tension: 0.2,
-                yAxisID: 'yPBF'
-              }
-            ]
+      chartInstanceWeightMuscle = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              type: 'line',
+              label: '體重 Weight (kg)',
+              data: weights,
+              borderColor: '#38bdf8', // Sky blue
+              backgroundColor: '#38bdf8',
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              tension: 0.2,
+              yAxisID: 'yWeight'
+            },
+            {
+              type: 'bar',
+              label: '骨骼肌量 Muscle (kg)',
+              data: muscles,
+              backgroundColor: 'rgba(16, 185, 129, 0.45)', // Semi-transparent emerald
+              borderColor: '#10b981',
+              borderWidth: 1.5,
+              borderRadius: 4,
+              barPercentage: 0.5,
+              yAxisID: 'yMuscle'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            doseChanges: doseChanges
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: { legend: { display: false } },
-            scales: {
-              x: {
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#94a3b8', font: { size: 10 } }
-              },
-              yFat: {
-                type: 'linear',
-                position: 'left',
-                title: { display: true, text: '體脂量 (kg)', color: '#f59e0b', font: { size: 10, weight: 'bold' } },
-                min: Math.floor(Math.min(...fats) - 2),
-                max: Math.ceil(Math.max(...fats) + 2),
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#f59e0b' }
-              },
-              yPBF: {
-                type: 'linear',
-                position: 'right',
-                title: { display: true, text: '體脂率 (%)', color: '#c084fc', font: { size: 10, weight: 'bold' } },
-                min: Math.floor(Math.min(...pbfs) - 2),
-                max: Math.ceil(Math.max(...pbfs) + 2),
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#c084fc' }
-              }
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#94a3b8', font: { size: 10 } }
+            },
+            yWeight: {
+              type: 'linear',
+              position: 'left',
+              title: { display: true, text: '體重 (kg)', color: '#38bdf8', font: { size: 11, weight: 'bold' } },
+              min: Math.floor(Math.min(...weights) - 2),
+              max: Math.ceil(Math.max(...weights) + 2),
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#38bdf8' }
+            },
+            yMuscle: {
+              type: 'linear',
+              position: 'right',
+              title: { display: true, text: '骨骼肌量 (kg)', color: '#10b981', font: { size: 11, weight: 'bold' } },
+              min: Math.floor(Math.min(...muscles) - 3),
+              max: Math.ceil(Math.max(...muscles) + 3),
+              grid: { drawOnChartArea: false },
+              ticks: { color: '#10b981' }
             }
           }
-        });
-      }
+        }
+      });
+
+      // --- Chart 2: Fat Mass & Body Fat % Dual Y-Axis ---
+      const ctx2 = document.getElementById('chartFatPBF').getContext('2d');
+      if (chartInstanceFatPBF) chartInstanceFatPBF.destroy();
+
+      chartInstanceFatPBF = new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '體脂肪量 Fat Mass (kg)',
+              data: fats,
+              borderColor: '#f59e0b', // Amber
+              backgroundColor: 'rgba(245, 158, 11, 0.15)',
+              borderWidth: 2.5,
+              fill: true,
+              pointRadius: 4,
+              tension: 0.2,
+              yAxisID: 'yFat'
+            },
+            {
+              label: '體脂率 PBF (%)',
+              data: pbfs,
+              borderColor: '#5eead4', // Teal light
+              backgroundColor: '#5eead4',
+              borderWidth: 2,
+              borderDash: [4, 4],
+              pointRadius: 4,
+              tension: 0.2,
+              yAxisID: 'yPBF'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            doseChanges: doseChanges
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#94a3b8', font: { size: 10 } }
+            },
+            yFat: {
+              type: 'linear',
+              position: 'left',
+              title: { display: true, text: '體脂肪量 (kg)', color: '#f59e0b', font: { size: 11, weight: 'bold' } },
+              min: Math.floor(Math.min(...fats) - 2),
+              max: Math.ceil(Math.max(...fats) + 2),
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#f59e0b' }
+            },
+            yPBF: {
+              type: 'linear',
+              position: 'right',
+              title: { display: true, text: '體脂率 (%)', color: '#5eead4', font: { size: 11, weight: 'bold' } },
+              min: Math.floor(Math.min(...pbfs) - 2),
+              max: Math.ceil(Math.max(...pbfs) + 2),
+              grid: { drawOnChartArea: false },
+              ticks: { color: '#5eead4' }
+            }
+          }
+        }
+      });
     }
   </script>
 </body>
