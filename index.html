@@ -1,73 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-TW" class="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>InBody 體態數據與猛健樂療程視覺化戰情室</title>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#ecfdf5',
-              500: '#10b981',
-              600: '#059669',
-              900: '#064e3b',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Chart.js CDN + Annotation Plugin -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: #0f172a;
-      color: #f8fafc;
-    }
-    .glass-card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 1rem;
-    }
-    .btn-tab {
-      transition: all 0.2s ease;
-    }
-    .btn-tab.active {
-      background-color: #10b981;
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0f172a;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 3px;
-    }
-  </style>
-</head>
-<body class="min-h-screen pb-12">
 
   <!-- Top Header -->
   <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
@@ -84,16 +15,20 @@
             </span>
           </h1>
           <p id="headerSubtitle" class="text-xs text-slate-400 mt-0.5">
-            💊 猛健乐療程：<span id="currentDoseBadge" class="font-semibold text-emerald-400">2.5 mg</span> ｜ 療程起始：2026/07/16 ｜ 算週平均精準追蹤
+            💊 猛健樂療程：<span id="currentDoseBadge" class="font-semibold text-emerald-400">2.5 mg</span> ｜ 療程起始：2026/07/16 ｜ 算週平均精準追蹤
           </p>
         </div>
       </div>
 
       <!-- Action & Config Controls -->
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <a id="bloodTestLink" href="https://docs.google.com/spreadsheets/d/1SgiX4vWzb4r62eqQDkse8oQeHvFthViSC_tMREgnDUY/edit" target="_blank" class="px-3 py-2 text-xs font-medium rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/60 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-droplet text-rose-400"></i>
+          🩸 血液報告
+        </a>
         <button onclick="refreshData()" class="px-3.5 py-2 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
           <i class="fa-solid fa-rotate text-emerald-400" id="refreshIcon"></i>
-          重新同步數據
+          重新同步
         </button>
         <button onclick="toggleConfigModal()" class="px-3.5 py-2 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
           <i class="fa-solid fa-gear text-slate-400"></i>
@@ -325,15 +260,20 @@
         <button onclick="toggleConfigModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div class="space-y-3 text-xs">
+      <div class="space-y-4 text-xs">
         <div>
-          <label class="block font-medium text-slate-300 mb-1">Google Sheets CSV Export URL (InBody Sheet):</label>
-          <input type="text" id="csvUrlInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono text-[11px]" value="https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/export?format=csv">
-          <p class="text-[11px] text-slate-400 mt-1">預設已綁定您的「InBody 體態數據記錄 V3」試算表 CSV 匯出網址。</p>
+          <label class="block font-medium text-slate-300 mb-1">1. InBody 體態數據 CSV 網址 (指定 gid=2019214985):</label>
+          <input type="text" id="csvUrlInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono text-[11px]" value="https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/export?format=csv&gid=2019214985">
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">2. Blood Test 血液檢驗 CSV 網址:</label>
+          <input type="text" id="bloodCsvUrlInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono text-[11px]" value="https://docs.google.com/spreadsheets/d/1SgiX4vWzb4r62eqQDkse8oQeHvFthViSC_tMREgnDUY/export?format=csv">
+          <p class="text-[11px] text-slate-400 mt-1">已補上血液檢驗試算表匯出網址，可點擊頂部「🩸 血液報告」快速存取。</p>
         </div>
 
         <div class="p-3 bg-slate-900/60 rounded-lg border border-slate-800">
-          <div class="font-semibold text-slate-300 mb-1">欄位順序規範：</div>
+          <div class="font-semibold text-slate-300 mb-1">InBody 欄位順序規範：</div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
             A: Date ｜ B: Weight ｜ C: Skeletal_Muscle ｜ D: Fat_Mass ｜ E: PBF ｜ F: BMI ｜ G: Visceral_Fat ｜ H: WHR ｜ I: BMR ｜ J: dose ｜ K: ai_analysis
           </p>
@@ -348,12 +288,13 @@
     </div>
   </div>
 
-  <!-- JavaScript Application Logic -->
+  <!-- JavaScript Application Logic (防禦修復版 + 雙表網址支援) -->
   <script>
-    // Default Google Sheets CSV Export URL
-    const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/export?format=csv";
+    // 預設 Google Sheets CSV Export URLs
+    const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/1YOMxysMDh5uNX9vg6ENgHWPYNx-6SQQ9HJP3QEnRt54/export?format=csv&gid=2019214985";
+    const DEFAULT_BLOOD_CSV_URL = "https://docs.google.com/spreadsheets/d/1SgiX4vWzb4r62eqQDkse8oQeHvFthViSC_tMREgnDUY/export?format=csv";
 
-    // Fallback Sample Data (Ensures smooth preview offline or if CORS blocked)
+    // 示範離線備用數據
     const SAMPLE_RAW_DATA = [
       ["Date", "Weight", "Skeletal_Muscle", "Fat_Mass", "PBF", "BMI", "Visceral_Fat", "WHR", "BMR", "dose", "ai_analysis"],
       ["2026/07/20", "84.7", "33.0", "26.6", "31.4", "29.5", "10", "0.92", "1720", "2.5", "🎯 療程起始基準點：C字型體態，肌肉量及格但體脂率高達 31.4%，猛健樂 2.5mg 啟動。"],
@@ -369,83 +310,107 @@
 
     let globalDailyData = [];
     let globalWeeklyData = [];
-    let currentViewTab = 'daily'; // 'daily' or 'weekly'
+    let currentViewTab = 'daily';
 
     let chartInstanceWeightMuscle = null;
     let chartInstanceFatPBF = null;
 
-    // Dose change detection vertical lines plugin for Chart.js
-    const doseAnnotationPlugin = {
-      id: 'doseAnnotationPlugin',
-      afterDraw(chart) {
-        const doseChanges = chart.config.options.plugins.doseChanges || [];
-        if (!doseChanges || doseChanges.length === 0) return;
-
-        const ctx = chart.ctx;
-        const xAxis = chart.scales.x;
-        const yAxis = chart.scales.y;
-
-        doseChanges.forEach(change => {
-          const index = change.index;
-          if (index < 0 || index >= xAxis.ticks.length) return;
-
-          const x = xAxis.getPixelForTick(index);
-          const top = yAxis.top;
-          const bottom = yAxis.bottom;
-
-          ctx.save();
-          // Draw vertical dashed line
-          ctx.beginPath();
-          ctx.setLineDash([6, 4]);
-          ctx.strokeStyle = '#ec4899'; // Pink/Rose highlight for dose change
-          ctx.lineWidth = 2;
-          ctx.moveTo(x, top);
-          ctx.lineTo(x, bottom);
-          ctx.stroke();
-
-          // Draw label badge
-          ctx.fillStyle = '#ec4899';
-          ctx.font = 'bold 11px Inter, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'bottom';
-          ctx.fillText(`💊 升階 ${change.newDose}mg`, x, top - 4);
-          ctx.restore();
-        });
-      }
-    };
-
-    Chart.register(doseAnnotationPlugin);
-
-    // Initialize application on load
-    window.onload = function() {
-      loadSavedConfig();
-      refreshData();
-    };
-
+    // 1. 優先定義彈窗與設定控制函數 (防禦 JS 崩潰)
     function toggleConfigModal() {
       const modal = document.getElementById('configModal');
-      modal.classList.toggle('hidden');
+      if (modal) {
+        modal.classList.toggle('hidden');
+      }
     }
 
     function loadSavedConfig() {
-      const savedUrl = localStorage.getItem('inbody_csv_url');
-      if (savedUrl) {
-        document.getElementById('csvUrlInput').value = savedUrl;
+      const savedInBodyUrl = localStorage.getItem('inbody_csv_url');
+      if (savedInBodyUrl) {
+        const input = document.getElementById('csvUrlInput');
+        if (input) input.value = savedInBodyUrl;
+      }
+
+      const savedBloodUrl = localStorage.getItem('blood_csv_url');
+      if (savedBloodUrl) {
+        const bloodInput = document.getElementById('bloodCsvUrlInput');
+        if (bloodInput) bloodInput.value = savedBloodUrl;
+        
+        // 同步更新血液報告按鈕連結
+        const bloodLink = document.getElementById('bloodTestLink');
+        if (bloodLink) {
+          bloodLink.href = savedBloodUrl.replace('/export?format=csv', '/edit');
+        }
       }
     }
 
     function saveConfig() {
-      const url = document.getElementById('csvUrlInput').value.trim();
-      if (url) {
-        localStorage.setItem('inbody_csv_url', url);
+      const input = document.getElementById('csvUrlInput');
+      if (input) {
+        const url = input.value.trim();
+        if (url) localStorage.setItem('inbody_csv_url', url);
       }
+
+      const bloodInput = document.getElementById('bloodCsvUrlInput');
+      if (bloodInput) {
+        const bloodUrl = bloodInput.value.trim();
+        if (bloodUrl) localStorage.setItem('blood_csv_url', bloodUrl);
+      }
+
       toggleConfigModal();
       refreshData();
     }
 
+    // 2. 安全註冊 Chart.js 標記外掛
+    if (typeof Chart !== 'undefined') {
+      const doseAnnotationPlugin = {
+        id: 'doseAnnotationPlugin',
+        afterDraw(chart) {
+          const doseChanges = chart.config.options?.plugins?.doseChanges || [];
+          if (!doseChanges || doseChanges.length === 0) return;
+
+          const ctx = chart.ctx;
+          const xAxis = chart.scales.x;
+          const yAxis = chart.scales.yWeight || chart.scales.y;
+          if (!xAxis || !yAxis) return;
+
+          doseChanges.forEach(change => {
+            const index = change.index;
+            if (index < 0 || index >= xAxis.ticks.length) return;
+
+            const x = xAxis.getPixelForTick(index);
+            const top = yAxis.top;
+            const bottom = yAxis.bottom;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.setLineDash([6, 4]);
+            ctx.strokeStyle = '#ec4899';
+            ctx.lineWidth = 2;
+            ctx.moveTo(x, top);
+            ctx.lineTo(x, bottom);
+            ctx.stroke();
+
+            ctx.fillStyle = '#ec4899';
+            ctx.font = 'bold 11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(`💊 升階 ${change.newDose}mg`, x, top - 4);
+            ctx.restore();
+          });
+        }
+      };
+      Chart.register(doseAnnotationPlugin);
+    }
+
+    // 3. DOM 載入後自動載入數據
+    window.addEventListener('DOMContentLoaded', function() {
+      loadSavedConfig();
+      refreshData();
+    });
+
     async function refreshData() {
       const refreshIcon = document.getElementById('refreshIcon');
-      refreshIcon.classList.add('fa-spin');
+      if (refreshIcon) refreshIcon.classList.add('fa-spin');
 
       const csvUrl = localStorage.getItem('inbody_csv_url') || DEFAULT_CSV_URL;
 
@@ -466,14 +431,17 @@
         processDataRows(SAMPLE_RAW_DATA);
         updateSyncBadge(false, "示範離線數據");
       } finally {
-        setTimeout(() => {
-          refreshIcon.classList.remove('fa-spin');
-        }, 500);
+        if (refreshIcon) {
+          setTimeout(() => {
+            refreshIcon.classList.remove('fa-spin');
+          }, 500);
+        }
       }
     }
 
     function updateSyncBadge(isLive, text) {
       const badge = document.getElementById('syncBadge');
+      if (!badge) return;
       if (isLive) {
         badge.className = "text-xs font-normal px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-1.5";
         badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${text}`;
@@ -483,11 +451,8 @@
       }
     }
 
-    // Simple CSV parser supporting quotes & linebreaks
     function parseCSV(text) {
-      const lines = text.split(/
-|
-/);
+      const lines = text.split(/\r\n|\n/);
       const result = [];
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
@@ -513,7 +478,6 @@
     }
 
     function processDataRows(rows) {
-      // Ignore header row if present
       let dataRows = rows;
       if (rows[0][0].toLowerCase().includes("date")) {
         dataRows = rows.slice(1);
@@ -535,7 +499,6 @@
         const whr = parseFloat(row[7]) || 0;
         const bmr = parseInt(row[8]) || 0;
 
-        // Forward fill dose if empty
         let dose = row[9] ? row[9].trim() : lastDose;
         if (!dose) dose = lastDose;
         lastDose = dose;
@@ -547,20 +510,15 @@
         });
       });
 
-      // Sort daily data chronologically
       globalDailyData.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      // Calculate Weekly Average Data
       globalWeeklyData = calculateWeeklyAverages(globalDailyData);
 
-      // Render UI Components
       renderHeaderAndAIInsight();
       renderKPICards();
       renderDataTable();
       renderCharts();
     }
 
-    // Calculate Weekly Averages based on ISO weeks or 7-day groups
     function calculateWeeklyAverages(dailyData) {
       const groups = {};
 
@@ -568,7 +526,6 @@
         const d = new Date(item.date);
         if (isNaN(d)) return;
 
-        // Get Monday of the week
         const day = d.getDay();
         const diff = d.getDate() - day + (day === 0 ? -6 : 1);
         const monday = new Date(d.setDate(diff));
@@ -596,7 +553,7 @@
         const avgMuscle = average(g.muscles);
         const avgFat = average(g.fats);
         const avgPBF = average(g.pbfs);
-        const dose = g.doses[g.doses.length - 1]; // Latest dose of the week
+        const dose = g.doses[g.doses.length - 1];
         const aiAnalysis = g.aiAnalyses.length > 0 ? g.aiAnalyses[g.aiAnalyses.length - 1] : "";
 
         weeklyAverages.push({
@@ -619,7 +576,7 @@
     }
 
     function getWeekNumber(d) {
-      const startDate = new Date(2026, 6, 20); // Baseline start 2026/07/20
+      const startDate = new Date(2026, 6, 20);
       const diffTime = Math.abs(d - startDate);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       return Math.floor(diffDays / 7) + 1;
@@ -629,14 +586,12 @@
       if (globalDailyData.length === 0) return;
       const latest = globalDailyData[globalDailyData.length - 1];
 
-      // Update Dose Badge
-      document.getElementById('currentDoseBadge').innerText = `${latest.dose} mg`;
+      const doseBadge = document.getElementById('currentDoseBadge');
+      if (doseBadge) doseBadge.innerText = `${latest.dose} mg`;
 
-      // Update AI Insight Container
       const aiContainer = document.getElementById('aiAnalysisContent');
       const aiDateBadge = document.getElementById('aiAnalysisDate');
 
-      // Find latest entry with non-empty AI Analysis
       let latestAIEntry = null;
       for (let i = globalDailyData.length - 1; i >= 0; i--) {
         if (globalDailyData[i].aiAnalysis && globalDailyData[i].aiAnalysis.trim() !== "") {
@@ -645,12 +600,9 @@
         }
       }
 
-      if (latestAIEntry) {
+      if (latestAIEntry && aiContainer && aiDateBadge) {
         aiDateBadge.innerText = `最新診斷日期：${latestAIEntry.date}｜劑量：${latestAIEntry.dose} mg`;
         aiContainer.innerHTML = latestAIEntry.aiAnalysis;
-      } else {
-        aiDateBadge.innerText = `基準日期：${latest.date}`;
-        aiContainer.innerHTML = "🎯 猛健樂療程穩定推進中。蛋白質每日保持 120g 以上，骨骼肌量保護完美，純脂肪高效持續燃燒！";
       }
     }
 
@@ -660,36 +612,28 @@
       const baseline = globalDailyData[0];
       const latest = globalDailyData[globalDailyData.length - 1];
 
-      // Weight
       document.getElementById('kpiWeight').innerHTML = `${latest.weight} <span class="text-xs font-normal text-slate-400">kg</span>`;
       const weightDiff = (latest.weight - baseline.weight).toFixed(1);
       document.getElementById('kpiWeightDiff').innerText = `${weightDiff <= 0 ? '📉' : '📈'} ${weightDiff} kg`;
-      document.getElementById('kpiWeightDiff').className = weightDiff <= 0 ? "text-xs font-medium text-emerald-400" : "text-xs font-medium text-rose-400";
 
-      // Muscle
       document.getElementById('kpiMuscle').innerHTML = `${latest.muscle} <span class="text-xs font-normal text-slate-400">kg</span>`;
       const muscleDiff = (latest.muscle - baseline.muscle).toFixed(1);
       document.getElementById('kpiMuscleDiff').innerText = `${muscleDiff >= 0 ? '📈' : '➖'} ${muscleDiff > 0 ? '+' : ''}${muscleDiff} kg`;
-      document.getElementById('kpiMuscleDiff').className = muscleDiff >= -0.3 ? "text-xs font-medium text-emerald-400" : "text-xs font-medium text-amber-400";
 
-      // Fat Mass
       document.getElementById('kpiFatMass').innerHTML = `${latest.fatMass} <span class="text-xs font-normal text-slate-400">kg</span>`;
       const fatDiff = (latest.fatMass - baseline.fatMass).toFixed(1);
       document.getElementById('kpiFatMassDiff').innerText = `${fatDiff <= 0 ? '📉' : '📈'} ${fatDiff} kg`;
 
-      // Body Fat %
       document.getElementById('kpiPBF').innerHTML = `${latest.pbf} <span class="text-xs font-normal text-slate-400">%</span>`;
       const pbfDiff = (latest.pbf - baseline.pbf).toFixed(1);
       document.getElementById('kpiPBFDiff').innerText = `${pbfDiff <= 0 ? '📉' : '📈'} ${pbfDiff}%`;
 
-      // Visceral Fat
       document.getElementById('kpiVisceral').innerHTML = `${latest.visceral} <span class="text-xs font-normal text-slate-400">級</span>`;
       const viscDiff = latest.visceral - baseline.visceral;
       document.getElementById('kpiVisceralDiff').innerText = `${viscDiff <= 0 ? '📉' : '📈'} ${viscDiff}`;
 
-      // Phase 1 Goal Progress (78.0 kg goal, baseline 84.7 kg)
       const targetWeight = 78.0;
-      const totalToLose = baseline.weight - targetWeight; // 6.7 kg
+      const totalToLose = baseline.weight - targetWeight;
       const currentLost = baseline.weight - latest.weight;
       let progressPct = Math.min(100, Math.max(0, (currentLost / totalToLose) * 100)).toFixed(1);
 
@@ -702,6 +646,7 @@
 
     function renderDataTable() {
       const tbody = document.getElementById('dataTableBody');
+      if (!tbody) return;
       document.getElementById('rowCountTag').innerText = `共 ${globalDailyData.length} 筆紀錄`;
 
       let html = '';
@@ -739,6 +684,8 @@
     }
 
     function renderCharts() {
+      if (typeof Chart === 'undefined') return;
+
       const activeData = currentViewTab === 'daily' ? globalDailyData : globalWeeklyData;
       if (activeData.length === 0) return;
 
@@ -748,7 +695,6 @@
       const fats = activeData.map(d => d.fatMass);
       const pbfs = activeData.map(d => d.pbf);
 
-      // Detect dose change indices
       const doseChanges = [];
       for (let i = 1; i < activeData.length; i++) {
         if (activeData[i].dose !== activeData[i - 1].dose) {
@@ -760,142 +706,147 @@
         }
       }
 
-      // --- Chart 1: Weight (Line) & Muscle (Bar) Dual Y-Axis ---
-      const ctx1 = document.getElementById('chartWeightMuscle').getContext('2d');
-      if (chartInstanceWeightMuscle) chartInstanceWeightMuscle.destroy();
+      // Chart 1
+      const chartEl1 = document.getElementById('chartWeightMuscle');
+      if (chartEl1) {
+        const ctx1 = chartEl1.getContext('2d');
+        if (chartInstanceWeightMuscle) chartInstanceWeightMuscle.destroy();
 
-      chartInstanceWeightMuscle = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              type: 'line',
-              label: '體重 Weight (kg)',
-              data: weights,
-              borderColor: '#38bdf8', // Sky blue
-              backgroundColor: '#38bdf8',
-              borderWidth: 2.5,
-              pointRadius: 4,
-              pointHoverRadius: 6,
-              tension: 0.2,
-              yAxisID: 'yWeight'
-            },
-            {
-              type: 'bar',
-              label: '骨骼肌量 Muscle (kg)',
-              data: muscles,
-              backgroundColor: 'rgba(16, 185, 129, 0.45)', // Semi-transparent emerald
-              borderColor: '#10b981',
-              borderWidth: 1.5,
-              borderRadius: 4,
-              barPercentage: 0.5,
-              yAxisID: 'yMuscle'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: { display: false },
-            doseChanges: doseChanges
+        chartInstanceWeightMuscle = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                type: 'line',
+                label: '體重 Weight (kg)',
+                data: weights,
+                borderColor: '#38bdf8',
+                backgroundColor: '#38bdf8',
+                borderWidth: 2.5,
+                pointRadius: 4,
+                tension: 0.2,
+                yAxisID: 'yWeight'
+              },
+              {
+                type: 'bar',
+                label: '骨骼肌量 Muscle (kg)',
+                data: muscles,
+                backgroundColor: 'rgba(16, 185, 129, 0.45)',
+                borderColor: '#10b981',
+                borderWidth: 1.5,
+                borderRadius: 4,
+                barPercentage: 0.5,
+                yAxisID: 'yMuscle'
+              }
+            ]
           },
-          scales: {
-            x: {
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: '#94a3b8', font: { size: 10 } }
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: false },
+              doseChanges: doseChanges
             },
-            yWeight: {
-              type: 'linear',
-              position: 'left',
-              title: { display: true, text: '體重 (kg)', color: '#38bdf8', font: { size: 11, weight: 'bold' } },
-              min: Math.floor(Math.min(...weights) - 2),
-              max: Math.ceil(Math.max(...weights) + 2),
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: '#38bdf8' }
-            },
-            yMuscle: {
-              type: 'linear',
-              position: 'right',
-              title: { display: true, text: '骨骼肌量 (kg)', color: '#10b981', font: { size: 11, weight: 'bold' } },
-              min: Math.floor(Math.min(...muscles) - 3),
-              max: Math.ceil(Math.max(...muscles) + 3),
-              grid: { drawOnChartArea: false },
-              ticks: { color: '#10b981' }
+            scales: {
+              x: {
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#94a3b8', font: { size: 10 } }
+              },
+              yWeight: {
+                type: 'linear',
+                position: 'left',
+                title: { display: true, text: '體重 (kg)', color: '#38bdf8', font: { size: 11, weight: 'bold' } },
+                min: Math.floor(Math.min(...weights) - 2),
+                max: Math.ceil(Math.max(...weights) + 2),
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#38bdf8' }
+              },
+              yMuscle: {
+                type: 'linear',
+                position: 'right',
+                title: { display: true, text: '骨骼肌量 (kg)', color: '#10b981', font: { size: 11, weight: 'bold' } },
+                min: Math.floor(Math.min(...muscles) - 3),
+                max: Math.ceil(Math.max(...muscles) + 3),
+                grid: { drawOnChartArea: false },
+                ticks: { color: '#10b981' }
+              }
             }
           }
-        }
-      });
+        });
+      }
 
-      // --- Chart 2: Fat Mass & Body Fat % Dual Y-Axis ---
-      const ctx2 = document.getElementById('chartFatPBF').getContext('2d');
-      if (chartInstanceFatPBF) chartInstanceFatPBF.destroy();
+      // Chart 2
+      const chartEl2 = document.getElementById('chartFatPBF');
+      if (chartEl2) {
+        const ctx2 = chartEl2.getContext('2d');
+        if (chartInstanceFatPBF) chartInstanceFatPBF.destroy();
 
-      chartInstanceFatPBF = new Chart(ctx2, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: '體脂肪量 Fat Mass (kg)',
-              data: fats,
-              borderColor: '#f59e0b', // Amber
-              backgroundColor: 'rgba(245, 158, 11, 0.15)',
-              borderWidth: 2.5,
-              fill: true,
-              pointRadius: 4,
-              tension: 0.2,
-              yAxisID: 'yFat'
-            },
-            {
-              label: '體脂率 PBF (%)',
-              data: pbfs,
-              borderColor: '#5eead4', // Teal light
-              backgroundColor: '#5eead4',
-              borderWidth: 2,
-              borderDash: [4, 4],
-              pointRadius: 4,
-              tension: 0.2,
-              yAxisID: 'yPBF'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: { display: false },
-            doseChanges: doseChanges
+        chartInstanceFatPBF = new Chart(ctx2, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: '體脂肪量 Fat Mass (kg)',
+                data: fats,
+                borderColor: '#f59e0b',
+                backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                borderWidth: 2.5,
+                fill: true,
+                pointRadius: 4,
+                tension: 0.2,
+                yAxisID: 'yFat'
+              },
+              {
+                label: '體脂率 PBF (%)',
+                data: pbfs,
+                borderColor: '#5eead4',
+                backgroundColor: '#5eead4',
+                borderWidth: 2,
+                borderDash: [4, 4],
+                pointRadius: 4,
+                tension: 0.2,
+                yAxisID: 'yPBF'
+              }
+            ]
           },
-          scales: {
-            x: {
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: '#94a3b8', font: { size: 10 } }
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: false },
+              doseChanges: doseChanges
             },
-            yFat: {
-              type: 'linear',
-              position: 'left',
-              title: { display: true, text: '體脂肪量 (kg)', color: '#f59e0b', font: { size: 11, weight: 'bold' } },
-              min: Math.floor(Math.min(...fats) - 2),
-              max: Math.ceil(Math.max(...fats) + 2),
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: '#f59e0b' }
-            },
-            yPBF: {
-              type: 'linear',
-              position: 'right',
-              title: { display: true, text: '體脂率 (%)', color: '#5eead4', font: { size: 11, weight: 'bold' } },
-              min: Math.floor(Math.min(...pbfs) - 2),
-              max: Math.ceil(Math.max(...pbfs) + 2),
-              grid: { drawOnChartArea: false },
-              ticks: { color: '#5eead4' }
+            scales: {
+              x: {
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#94a3b8', font: { size: 10 } }
+              },
+              yFat: {
+                type: 'linear',
+                position: 'left',
+                title: { display: true, text: '體脂肪量 (kg)', color: '#f59e0b', font: { size: 11, weight: 'bold' } },
+                min: Math.floor(Math.min(...fats) - 2),
+                max: Math.ceil(Math.max(...fats) + 2),
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#f59e0b' }
+              },
+              yPBF: {
+                type: 'linear',
+                position: 'right',
+                title: { display: true, text: '體脂率 (%)', color: '#5eead4', font: { size: 11, weight: 'bold' } },
+                min: Math.floor(Math.min(...pbfs) - 2),
+                max: Math.ceil(Math.max(...pbfs) + 2),
+                grid: { drawOnChartArea: false },
+                ticks: { color: '#5eead4' }
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
   </script>
 </body>
