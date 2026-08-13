@@ -9,25 +9,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* 橫向滾動條微調 */
-    ::-webkit-scrollbar {
-      height: 6px;
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #1e293b;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #475569;
-      border-radius: 4px;
-    }
-    /* 收合箭頭動畫 */
-    details summary::-webkit-details-marker {
-      display:none;
-    }
-    details[open] summary .arrow-icon {
-      transform: rotate(180deg);
-    }
+    ::-webkit-scrollbar { height: 6px; width: 6px; }
+    ::-webkit-scrollbar-track { background: #1e293b; }
+    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+    details summary::-webkit-details-marker { display:none; }
+    details[open] summary .arrow-icon { transform: rotate(180deg); }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased pb-12">
@@ -39,7 +25,7 @@
         </div>
         <div>
           <h1 class="text-sm sm:text-lg font-bold text-white tracking-tight leading-snug">體態與健康數據儀表板</h1>
-          <p class="text-[10px] sm:text-xs text-slate-400">猛健樂 5mg 療程階梯追蹤</p>
+          <p id="header-subtitle" class="text-[10px] sm:text-xs text-slate-400">猛健樂療程追蹤</p>
         </div>
       </div>
       <button onclick="loadAllData()" class="p-2 sm:px-3 sm:py-2 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-teal-400 transition-all flex items-center gap-1.5 text-xs font-semibold">
@@ -131,7 +117,7 @@
             <i class="fa-solid fa-chart-area text-teal-400"></i>
             體態變化趨勢圖
           </h2>
-          <p class="text-xs text-slate-400">雙 Y 軸精準解析：肌肉量維持 vs 脂肪規律遞減</p>
+          <p class="text-xs text-slate-400">雙 Y 軸精準解析：以 60kg 為基準的長遠目標視角</p>
         </div>
         <div class="inline-flex p-1 bg-slate-900/80 rounded-xl border border-slate-700/80 self-start sm:self-auto">
           <button id="btn-mode-daily" onclick="switchViewMode('daily')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-teal-500 text-slate-950 shadow">
@@ -145,7 +131,7 @@
 
       <div class="space-y-2">
         <h3 class="text-xs sm:text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+          <span class="w-2 h-2 rounded-full bg-purple-500"></span>
           體重 (左 Y 軸) vs. 骨骼肌量 (右 Y 軸)
         </h3>
         <div class="relative w-full h-64 sm:h-80 bg-slate-900/40 rounded-xl p-2 sm:p-3 border border-slate-700/30">
@@ -172,7 +158,6 @@
         </h2>
         <span class="text-[11px] sm:text-xs text-slate-400 bg-slate-700/50 px-2.5 py-1 rounded-full">療程前基準點</span>
       </div>
-
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" id="blood-test-container">
         </div>
     </section>
@@ -193,7 +178,6 @@
             <i class="fa-solid fa-chevron-down text-slate-400 text-xs sm:text-sm transition-transform duration-300 arrow-icon"></i>
           </div>
         </summary>
-
         <div class="p-3 sm:p-5 border-t border-slate-700/60 bg-slate-900/60">
           <div class="overflow-x-auto rounded-xl border border-slate-700/50">
             <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
@@ -201,11 +185,11 @@
                 <tr>
                   <th class="py-3 px-3.5">日期</th>
                   <th class="py-3 px-3.5">時間</th>
+                  <th class="py-3 px-3.5">劑量(mg)</th>
                   <th class="py-3 px-3.5">體重 (kg)</th>
                   <th class="py-3 px-3.5">骨骼肌 (kg)</th>
                   <th class="py-3 px-3.5">體脂肪 (kg)</th>
                   <th class="py-3 px-3.5">體脂率 (%)</th>
-                  <th class="py-3 px-3.5">BMI</th>
                   <th class="py-3 px-3.5">內臟脂肪</th>
                   <th class="py-3 px-3.5">備註</th>
                 </tr>
@@ -238,7 +222,6 @@
         if(!inbodyRes.ok) throw new Error("Network response was not ok");
         const inbodyText = await inbodyRes.text();
         
-        // 🚀 使用 PapaParse 來解析 CSV，能完美處理「儲存格內的換行符號」
         const parsed = Papa.parse(inbodyText, { skipEmptyLines: true });
         const rows = parsed.data;
         
@@ -246,7 +229,6 @@
           rawInbodyData = [];
           for(let i = 1; i < rows.length; i++) {
             const r = rows[i];
-            // 確保資料列有效
             if(!r || !r[0] || r[0].length < 5) continue;
             
             const date = r[0];
@@ -257,12 +239,14 @@
             const pbf = parseFloat(r[5]) || null;
             const bmi = parseFloat(r[6]) || null;
             const visceral = parseFloat(r[7]) || null;
-            const note = r[8] || '';
-            const aiAnalysis = r[9] || r[10] || ''; // 正確對應 AI 解析欄位
+            
+            const dose = r[8] || '-'; // I 欄
+            const note = r[9] || '';  // J 欄
+            const aiAnalysis = r[10] ? r[10].trim() : ''; // K 欄
 
             if(weight !== null && !isNaN(weight)) {
               rawInbodyData.push({
-                date, time, weight, muscle, fat, pbf, bmi, visceral, note, aiAnalysis
+                date, time, weight, muscle, fat, pbf, bmi, visceral, dose, note, aiAnalysis
               });
             }
           }
@@ -277,8 +261,7 @@
 
       } catch (err) {
         console.error("Data Load Error:", err);
-        // 🚨 防呆提示：如果是權限跑掉導致抓不到資料，會直接跳出提醒
-        alert("⚠️ 資料讀取失敗！\n\n如果上傳 GitHub 後看不到資料，99% 是 Google 試算表權限跑掉了。請確認您的試算表已開啟「知道連結的人皆可檢視」。");
+        alert("⚠️ 資料讀取失敗！\n\n請確認您的試算表已開啟「知道連結的人皆可檢視」。");
       } finally {
         if(refreshBtn) refreshBtn.classList.remove('fa-spin');
       }
@@ -288,6 +271,10 @@
       if (!data || data.length === 0) return;
       const latest = data[data.length - 1];
       const first = data[0];
+
+      if(latest.dose && latest.dose !== '-') {
+        document.getElementById('header-subtitle').innerText = `猛健樂 ${latest.dose}mg 療程階梯追蹤`;
+      }
 
       document.getElementById('kpi-weight').innerHTML = `${latest.weight} <span class="text-xs font-normal text-slate-400">kg</span>`;
       document.getElementById('kpi-muscle').innerHTML = `${latest.muscle} <span class="text-xs font-normal text-slate-400">kg</span>`;
@@ -314,7 +301,7 @@
 
       let latestAiEntry = null;
       for(let i = data.length - 1; i >= 0; i--) {
-        if(data[i].aiAnalysis && data[i].aiAnalysis.trim().length > 10) {
+        if(data[i].aiAnalysis && data[i].aiAnalysis.length > 5) {
           latestAiEntry = data[i];
           break;
         }
@@ -322,7 +309,6 @@
 
       if(latestAiEntry) {
         dateBadge.innerText = `${latestAiEntry.date} 診斷`;
-        // 完美支援 Google Sheets 裡面的真實換行 (\n) 轉 HTML
         let formattedText = latestAiEntry.aiAnalysis
           .replace(/\\n/g, '<br>')
           .replace(/\n/g, '<br>')
@@ -330,7 +316,7 @@
         container.innerHTML = formattedText;
       } else {
         dateBadge.innerText = '系統預設';
-        container.innerHTML = '<p class="text-slate-400">尚無最新 AI 診斷紀錄，請更新試算表。</p>';
+        container.innerHTML = '<p class="text-slate-400">尚無最新 AI 診斷紀錄，請確認 Google Sheet 第 K 欄 (ai_analysis) 是否有文字。</p>';
       }
     }
 
@@ -346,11 +332,11 @@
         tr.innerHTML = `
           <td class="py-2.5 px-3.5 font-medium text-slate-200">${r.date}</td>
           <td class="py-2.5 px-3.5 text-slate-400">${r.time}</td>
+          <td class="py-2.5 px-3.5 text-slate-300 font-bold">${r.dose}</td>
           <td class="py-2.5 px-3.5 font-bold text-white">${r.weight}</td>
           <td class="py-2.5 px-3.5 text-emerald-400 font-semibold">${r.muscle}</td>
           <td class="py-2.5 px-3.5 text-amber-400 font-semibold">${r.fat}</td>
           <td class="py-2.5 px-3.5 text-teal-300 font-semibold">${r.pbf}%</td>
-          <td class="py-2.5 px-3.5 text-slate-300">${r.bmi}</td>
           <td class="py-2.5 px-3.5 text-indigo-300">${r.visceral}</td>
           <td class="py-2.5 px-3.5 text-slate-400 text-xs whitespace-normal max-w-[150px]">${r.note || '-'}</td>
         `;
@@ -407,6 +393,14 @@
       renderCharts();
     }
 
+    function getMinMax(arr, padding = 1) {
+      const valid = arr.filter(v => v !== null && v > 0 && !isNaN(v));
+      if(valid.length === 0) return { min: 0, max: 100 };
+      const min = Math.min(...valid);
+      const max = Math.max(...valid);
+      return { min: Math.floor(min - padding), max: Math.ceil(max + padding) };
+    }
+
     function renderCharts() {
       if(!rawInbodyData || rawInbodyData.length === 0) return;
 
@@ -431,7 +425,12 @@
         pbfs = weeklyData.map(d => d.pbf);
       }
 
-      // 圖表 1: 體重 + 骨骼肌
+      const weightBounds = getMinMax(weights, 1.5);
+      const muscleBounds = getMinMax(muscles, 1);
+      const fatBounds = getMinMax(fats, 1.5);
+      const pbfBounds = getMinMax(pbfs, 1.5);
+
+      // 圖表 1: 體重 (紫) + 骨骼肌 (綠)
       const ctx1 = document.getElementById('weightMuscleChart').getContext('2d');
       if(weightMuscleChartInstance) weightMuscleChartInstance.destroy();
 
@@ -444,20 +443,20 @@
               type: 'line',
               label: '體重 (kg)',
               data: weights,
-              borderColor: '#14b8a6',
-              backgroundColor: '#14b8a6',
+              borderColor: '#a855f7',
+              backgroundColor: '#a855f7',
               borderWidth: 2.5,
               tension: 0.3,
               pointRadius: 3.5,
-              pointBackgroundColor: '#14b8a6',
+              pointBackgroundColor: '#a855f7',
               yAxisID: 'yWeight',
             },
             {
               type: 'bar',
               label: '骨骼肌量 (kg)',
               data: muscles,
-              backgroundColor: 'rgba(52, 211, 153, 0.35)',
-              borderColor: '#34d399',
+              backgroundColor: 'rgba(16, 185, 129, 0.35)',
+              borderColor: '#10b981',
               borderWidth: 1.5,
               borderRadius: 5,
               yAxisID: 'yMuscle',
@@ -477,26 +476,28 @@
             yWeight: {
               type: 'linear',
               position: 'left',
-              title: { display: true, text: '體重 (kg)', color: '#14b8a6', font: { size: 10 } },
-              ticks: { color: '#14b8a6', font: { size: 9 } },
+              title: { display: true, text: '體重 (kg)', color: '#a855f7', font: { size: 10 } },
+              ticks: { color: '#a855f7', font: { size: 9 } },
               grid: { color: 'rgba(51, 65, 85, 0.4)' },
-              suggestedMin: Math.min(...weights) - 1,
-              suggestedMax: Math.max(...weights) + 1,
+              min: 60, // 🔥 採納建議：將 Y 軸下限嚴格鎖定在 60kg
+              max: weightBounds.max > 86 ? weightBounds.max : 88, // 預留頂部空間
+              beginAtZero: false 
             },
             yMuscle: {
               type: 'linear',
               position: 'right',
-              title: { display: true, text: '骨骼肌 (kg)', color: '#34d399', font: { size: 10 } },
-              ticks: { color: '#34d399', font: { size: 9 } },
+              title: { display: true, text: '骨骼肌 (kg)', color: '#10b981', font: { size: 10 } },
+              ticks: { color: '#10b981', font: { size: 9 } },
               grid: { drawOnChartArea: false },
-              suggestedMin: Math.min(...muscles) - 1,
-              suggestedMax: Math.max(...muscles) + 1,
+              min: muscleBounds.min,
+              max: muscleBounds.max,
+              beginAtZero: false
             }
           }
         }
       });
 
-      // 圖表 2: 體脂肪量 + 體脂率
+      // 圖表 2: 體脂肪量 (黃) + 體脂率 (藍)
       const ctx2 = document.getElementById('fatPbfChart').getContext('2d');
       if(fatPbfChartInstance) fatPbfChartInstance.destroy();
 
@@ -509,8 +510,8 @@
               type: 'bar',
               label: '體脂肪量 (kg)',
               data: fats,
-              backgroundColor: 'rgba(251, 191, 36, 0.35)',
-              borderColor: '#fbbf24',
+              backgroundColor: 'rgba(245, 158, 11, 0.35)',
+              borderColor: '#f59e0b',
               borderWidth: 1.5,
               borderRadius: 5,
               yAxisID: 'yFat',
@@ -519,12 +520,12 @@
               type: 'line',
               label: '體脂率 (%)',
               data: pbfs,
-              borderColor: '#38bdf8',
-              backgroundColor: '#38bdf8',
+              borderColor: '#0ea5e9',
+              backgroundColor: '#0ea5e9',
               borderWidth: 2.5,
               tension: 0.3,
               pointRadius: 3.5,
-              pointBackgroundColor: '#38bdf8',
+              pointBackgroundColor: '#0ea5e9',
               yAxisID: 'yPbf',
             }
           ]
@@ -542,20 +543,22 @@
             yFat: {
               type: 'linear',
               position: 'left',
-              title: { display: true, text: '脂肪量 (kg)', color: '#fbbf24', font: { size: 10 } },
-              ticks: { color: '#fbbf24', font: { size: 9 } },
+              title: { display: true, text: '脂肪量 (kg)', color: '#f59e0b', font: { size: 10 } },
+              ticks: { color: '#f59e0b', font: { size: 9 } },
               grid: { color: 'rgba(51, 65, 85, 0.4)' },
-              suggestedMin: Math.min(...fats) - 1,
-              suggestedMax: Math.max(...fats) + 1,
+              min: fatBounds.min,
+              max: fatBounds.max,
+              beginAtZero: false
             },
             yPbf: {
               type: 'linear',
               position: 'right',
-              title: { display: true, text: '體脂率 (%)', color: '#38bdf8', font: { size: 10 } },
-              ticks: { color: '#38bdf8', font: { size: 9 } },
+              title: { display: true, text: '體脂率 (%)', color: '#0ea5e9', font: { size: 10 } },
+              ticks: { color: '#0ea5e9', font: { size: 9 } },
               grid: { drawOnChartArea: false },
-              suggestedMin: Math.min(...pbfs) - 1,
-              suggestedMax: Math.max(...pbfs) + 1,
+              min: pbfBounds.min,
+              max: pbfBounds.max,
+              beginAtZero: false
             }
           }
         }
